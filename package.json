@@ -10,7 +10,8 @@
     "build": "vue-tsc --noEmit --skipLibCheck && vite build --config ./config/vite.config.prod.ts",
     "lint-staged": "npx lint-staged",
     "prepare": "husky install",
-    "build:normal": "vite build --config ./config/vite.config.prod.ts"
+    "build:normal": "vite build --config ./config/vite.config.prod.ts",
+    "format": "prettier --write . "
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.23.0",

@@ -14,15 +14,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { useAppStore } from '@/store';
-import FormWrapper from './form-wrapper.vue';
+import { defineComponent, PropType } from 'vue'
+import { useAppStore } from '@/store'
+import FormWrapper from './form-wrapper.vue'
 
 interface OptionsProps {
-  name: string;
-  key: string;
-  type?: string;
-  defaultVal?: boolean | string | number;
+  name: string
+  key: string
+  type?: string
+  defaultVal?: boolean | string | number
 }
 
 export default defineComponent({
@@ -37,26 +37,26 @@ export default defineComponent({
     options: {
       type: Array as PropType<OptionsProps[]>,
       default() {
-        return [];
+        return []
       },
     },
   },
   setup() {
-    const appStore = useAppStore();
+    const appStore = useAppStore()
     const handleChange = ({ key, value }: { key: string; value: unknown }) => {
       if (value && key === 'colorWeek') {
-        document.body.style.filter = 'invert(80%)';
+        document.body.style.filter = 'invert(80%)'
       }
       if (!value && key === 'colorWeek') {
-        document.body.style.filter = 'none';
+        document.body.style.filter = 'none'
       }
-      appStore.updateSettings({ [key]: value });
-    };
+      appStore.updateSettings({ [key]: value })
+    }
     return {
       handleChange,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

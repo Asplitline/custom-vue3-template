@@ -27,12 +27,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { defineComponent, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n()
     const dataStatus = computed(() => [
       {
         label: 'mainstream',
@@ -58,7 +58,7 @@ export default defineComponent({
         label: t('monitor.studioStatus.frameRate'),
         value: '60',
       },
-    ]);
+    ])
     const dataPicture = computed(() => [
       {
         label: t('monitor.studioStatus.line'),
@@ -76,13 +76,13 @@ export default defineComponent({
         label: t('monitor.studioStatus.pictureQuality'),
         value: '原画',
       },
-    ]);
+    ])
     return {
       dataStatus,
       dataPicture,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

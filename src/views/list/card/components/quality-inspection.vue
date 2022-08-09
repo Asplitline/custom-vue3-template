@@ -54,27 +54,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { queryInspectionList, ServiceRecord } from '@/api/list';
-import useRequest from '@/hooks/request';
-import CardWrap from './card-wrap.vue';
+import { defineComponent } from 'vue'
+import { queryInspectionList, ServiceRecord } from '@/api/list'
+import useRequest from '@/hooks/request'
+import CardWrap from './card-wrap.vue'
 
 export default defineComponent({
   components: {
     CardWrap,
   },
   setup() {
-    const defaultValue: ServiceRecord[] = new Array(3).fill({});
+    const defaultValue: ServiceRecord[] = new Array(3).fill({})
     const { loading, response: renderData } = useRequest<ServiceRecord[]>(
       queryInspectionList,
       defaultValue
-    );
+    )
     return {
       loading,
       renderData,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

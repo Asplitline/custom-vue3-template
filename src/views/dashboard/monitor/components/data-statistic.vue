@@ -32,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import DataStatisticList from './data-statistic-list.vue';
+import { defineComponent } from 'vue'
+import DataStatisticList from './data-statistic-list.vue'
 
 export default defineComponent({
   components: {
     DataStatisticList,
   },
-});
+})
 </script>
 
 <style scoped lang="less">

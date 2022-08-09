@@ -34,12 +34,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import ChainItem from './chain-item.vue';
+import { defineComponent } from 'vue'
+import ChainItem from './chain-item.vue'
 
 export default defineComponent({
   components: {
     ChainItem,
   },
-});
+})
 </script>

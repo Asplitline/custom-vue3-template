@@ -26,17 +26,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { ProfileBasicRes } from '@/api/profile';
+import { defineComponent, computed, PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { ProfileBasicRes } from '@/api/profile'
 
 type BlockList = {
-  title: string;
+  title: string
   data: {
-    label: string;
-    value: string;
-  }[];
-}[];
+    label: string
+    value: string
+  }[]
+}[]
 export default defineComponent({
   props: {
     type: {
@@ -53,10 +53,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { t } = useI18n();
+    const { t } = useI18n()
     const blockDataList = computed<BlockList>(() => {
-      const { renderData } = props;
-      const result = [];
+      const { renderData } = props
+      const result = []
       result.push({
         title:
           props.type === 'pre'
@@ -100,7 +100,7 @@ export default defineComponent({
             value: renderData?.video?.encoding.profile || '-',
           },
         ],
-      });
+      })
 
       result.push({
         title:
@@ -133,16 +133,16 @@ export default defineComponent({
             value: renderData?.audio?.encoding.profile || '-',
           },
         ],
-      });
+      })
 
-      return result;
-    });
+      return result
+    })
 
     return {
       blockDataList,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

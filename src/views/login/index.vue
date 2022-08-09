@@ -20,10 +20,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import Footer from '@/components/footer/index.vue';
-import LoginBanner from './components/banner.vue';
-import LoginForm from './components/login-form.vue';
+import { defineComponent } from 'vue'
+import Footer from '@/components/footer/index.vue'
+import LoginBanner from './components/banner.vue'
+import LoginForm from './components/login-form.vue'
 
 export default defineComponent({
   components: {
@@ -31,7 +31,7 @@ export default defineComponent({
     LoginForm,
     Footer,
   },
-});
+})
 </script>
 
 <style lang="less" scoped>

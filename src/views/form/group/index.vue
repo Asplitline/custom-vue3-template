@@ -250,32 +250,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { FormInstance } from '@arco-design/web-vue/es/form';
-import useLoading from '@/hooks/loading';
+import { defineComponent, ref } from 'vue'
+import { FormInstance } from '@arco-design/web-vue/es/form'
+import useLoading from '@/hooks/loading'
 
 export default defineComponent({
   setup() {
-    const formData = ref({});
-    const formRef = ref<FormInstance>();
-    const { loading, setLoading } = useLoading();
+    const formData = ref({})
+    const formRef = ref<FormInstance>()
+    const { loading, setLoading } = useLoading()
     const onSubmitClick = async () => {
-      const res = await formRef.value?.validate();
+      const res = await formRef.value?.validate()
       if (!res) {
-        setLoading(true);
+        setLoading(true)
       }
       setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    };
+        setLoading(false)
+      }, 1000)
+    }
     return {
       loading,
       formRef,
       formData,
       onSubmitClick,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import useChartOption from '@/hooks/chart-option';
+import { defineComponent } from 'vue'
+import useChartOption from '@/hooks/chart-option'
 
 export default defineComponent({
   setup() {
@@ -99,14 +99,14 @@ export default defineComponent({
             ],
           },
         ],
-      };
-    });
+      }
+    })
 
     return {
       chartOption,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less"></style>

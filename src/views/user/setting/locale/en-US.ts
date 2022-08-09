@@ -88,4 +88,4 @@ export default {
   'userSetting.certification.columns.operation': 'Operation',
   'userSetting.certification.button.check': 'Check',
   'userSetting.certification.button.withdraw': 'Withdraw',
-};
+}

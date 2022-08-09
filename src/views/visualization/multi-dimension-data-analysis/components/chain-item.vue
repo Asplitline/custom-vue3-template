@@ -29,10 +29,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
-import useLoading from '@/hooks/loading';
-import { queryDataChainGrowth, DataChainGrowth } from '@/api/visualization';
-import useChartOption from '@/hooks/chart-option';
+import { computed, defineComponent, ref } from 'vue'
+import useLoading from '@/hooks/loading'
+import { queryDataChainGrowth, DataChainGrowth } from '@/api/visualization'
+import useChartOption from '@/hooks/chart-option'
 
 export default defineComponent({
   props: {
@@ -50,11 +50,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { loading, setLoading } = useLoading(true);
-    const count = ref(0);
-    const growth = ref(100);
-    const isUp = computed(() => growth.value > 50);
-    const chartDatas = ref<any>([]);
+    const { loading, setLoading } = useLoading(true)
+    const count = ref(0)
+    const growth = ref(100)
+    const isUp = computed(() => growth.value > 50)
+    const chartDatas = ref<any>([])
     const { chartOption } = useChartOption(() => {
       return {
         grid: {
@@ -94,14 +94,14 @@ export default defineComponent({
                 }),
           },
         ],
-      };
-    });
+      }
+    })
     const fetchData = async (params: DataChainGrowth) => {
       try {
-        const { data } = await queryDataChainGrowth(params);
-        const { chartData } = data;
-        count.value = data.count;
-        growth.value = data.growth;
+        const { data } = await queryDataChainGrowth(params)
+        const { chartData } = data
+        count.value = data.count
+        growth.value = data.growth
         chartData.data.value.forEach((el, idx) => {
           if (props.chartType === 'bar') {
             chartDatas.value.push({
@@ -109,27 +109,27 @@ export default defineComponent({
               itemStyle: {
                 color: idx % 2 ? '#468DFF' : '#86DF6C',
               },
-            });
+            })
           } else {
-            chartDatas.value.push(el);
+            chartDatas.value.push(el)
           }
-        });
+        })
       } catch (err) {
         // you can report use errorHandler or other
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchData({ quota: props.quota });
+    }
+    fetchData({ quota: props.quota })
     return {
       loading,
       count,
       growth,
       chartOption,
       isUp,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

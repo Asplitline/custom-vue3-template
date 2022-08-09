@@ -41,23 +41,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { queryMyProjectList, MyProjectRecord } from '@/api/user-center';
-import useRequest from '@/hooks/request';
+import { defineComponent } from 'vue'
+import { queryMyProjectList, MyProjectRecord } from '@/api/user-center'
+import useRequest from '@/hooks/request'
 
 export default defineComponent({
   setup() {
-    const defaultValue = Array(6).fill({} as MyProjectRecord);
+    const defaultValue = Array(6).fill({} as MyProjectRecord)
     const { loading, response: projectList } = useRequest<MyProjectRecord[]>(
       queryMyProjectList,
       defaultValue
-    );
+    )
     return {
       loading,
       projectList,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

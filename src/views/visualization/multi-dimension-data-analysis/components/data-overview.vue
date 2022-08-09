@@ -33,14 +33,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { LineSeriesOption } from 'echarts';
-import { queryDataOverview } from '@/api/visualization';
-import useLoading from '@/hooks/loading';
-import { ToolTipFormatterParams } from '@/types/echarts';
-import useThemes from '@/hooks/themes';
-import useChartOption from '@/hooks/chart-option';
+import { defineComponent, computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { LineSeriesOption } from 'echarts'
+import { queryDataOverview } from '@/api/visualization'
+import useLoading from '@/hooks/loading'
+import { ToolTipFormatterParams } from '@/types/echarts'
+import useThemes from '@/hooks/themes'
+import useChartOption from '@/hooks/chart-option'
 
 const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
   return items
@@ -55,8 +55,8 @@ const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
       </div>`
     )
     .reverse()
-    .join('');
-};
+    .join('')
+}
 
 const generateSeries = (
   name: string,
@@ -92,13 +92,13 @@ const generateSeries = (
       opacity: 0.1,
       color: lineColor,
     },
-  };
-};
+  }
+}
 export default defineComponent({
   setup() {
-    const { t } = useI18n();
-    const { loading, setLoading } = useLoading(true);
-    const { isDark } = useThemes();
+    const { t } = useI18n()
+    const { loading, setLoading } = useLoading(true)
+    const { isDark } = useThemes()
     const renderData = computed(() => [
       {
         title: t('multiDAnalysis.dataOverview.contentProduction'),
@@ -136,12 +136,12 @@ export default defineComponent({
           iconColor: isDark.value ? '#8558D3' : '#722ED1',
         },
       },
-    ]);
-    const xAxis = ref<string[]>([]);
-    const contentProductionData = ref<number[]>([]);
-    const contentClickData = ref<number[]>([]);
-    const contentExposureData = ref<number[]>([]);
-    const activeUsersData = ref<number[]>([]);
+    ])
+    const xAxis = ref<string[]>([])
+    const contentProductionData = ref<number[]>([])
+    const contentClickData = ref<number[]>([])
+    const contentExposureData = ref<number[]>([])
+    const activeUsersData = ref<number[]>([])
     const { chartOption } = useChartOption((dark) => {
       return {
         grid: {
@@ -158,9 +158,9 @@ export default defineComponent({
           axisLabel: {
             color: '#4E5969',
             formatter(value: number, idx: number) {
-              if (idx === 0) return '';
-              if (idx === xAxis.value.length - 1) return '';
-              return `${value}`;
+              if (idx === 0) return ''
+              if (idx === xAxis.value.length - 1) return ''
+              return `${value}`
             },
           },
           axisLine: {
@@ -187,8 +187,8 @@ export default defineComponent({
           },
           axisLabel: {
             formatter(value: number, idx: number) {
-              if (idx === 0) return String(value);
-              return `${value / 1000}k`;
+              if (idx === 0) return String(value)
+              return `${value / 1000}k`
             },
           },
           splitLine: {
@@ -200,11 +200,11 @@ export default defineComponent({
         tooltip: {
           trigger: 'axis',
           formatter(params) {
-            const [firstElement] = params as ToolTipFormatterParams[];
+            const [firstElement] = params as ToolTipFormatterParams[]
             return `<div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
             ${tooltipItemsHtmlString(params as ToolTipFormatterParams[])}
-          </div>`;
+          </div>`
           },
           className: 'echarts-tooltip-diy',
         },
@@ -260,37 +260,37 @@ export default defineComponent({
             activeUsersData.value
           ),
         ],
-      };
-    });
+      }
+    })
     const fetchData = async () => {
-      setLoading(true);
+      setLoading(true)
       try {
-        const { data } = await queryDataOverview();
-        xAxis.value = data.xAxis;
+        const { data } = await queryDataOverview()
+        xAxis.value = data.xAxis
         data.data.forEach((el) => {
           if (el.name === '内容生产量') {
-            contentProductionData.value = el.value;
+            contentProductionData.value = el.value
           } else if (el.name === '内容点击量') {
-            contentClickData.value = el.value;
+            contentClickData.value = el.value
           } else if (el.name === '内容曝光量') {
-            contentExposureData.value = el.value;
+            contentExposureData.value = el.value
           }
-          activeUsersData.value = el.value;
-        });
+          activeUsersData.value = el.value
+        })
       } catch (err) {
         // you can report use errorHandler or other
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchData();
+    }
+    fetchData()
     return {
       loading,
       renderData,
       chartOption,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

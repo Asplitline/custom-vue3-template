@@ -47,32 +47,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import useLoading from '@/hooks/loading';
-import { queryPopularAuthor, PopularAuthorRes } from '@/api/visualization';
+import { defineComponent, ref } from 'vue'
+import useLoading from '@/hooks/loading'
+import { queryPopularAuthor, PopularAuthorRes } from '@/api/visualization'
 
 export default defineComponent({
   setup() {
-    const { loading, setLoading } = useLoading();
-    const tableData = ref<PopularAuthorRes>({ list: [] });
+    const { loading, setLoading } = useLoading()
+    const tableData = ref<PopularAuthorRes>({ list: [] })
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const { data } = await queryPopularAuthor();
-        tableData.value = data;
+        setLoading(true)
+        const { data } = await queryPopularAuthor()
+        tableData.value = data
       } catch (err) {
         // you can report use errorHandler or other
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchData();
+    }
+    fetchData()
     return {
       loading,
       tableData,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

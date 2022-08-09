@@ -96,39 +96,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { FormInstance } from '@arco-design/web-vue/es/form';
-import { ChannelInfoModel } from '@/api/form';
+import { defineComponent, ref } from 'vue'
+import { FormInstance } from '@arco-design/web-vue/es/form'
+import { ChannelInfoModel } from '@/api/form'
 
 export default defineComponent({
   emits: ['changeStep'],
   setup(props, ctx) {
-    const formRef = ref<FormInstance>();
+    const formRef = ref<FormInstance>()
     const formData = ref<ChannelInfoModel>({
       advertisingSource: '',
       advertisingMedia: '',
       keyword: [],
       pushNotify: true,
       advertisingContent: '',
-    });
+    })
 
     const onNextClick = async () => {
-      const res = await formRef.value?.validate();
+      const res = await formRef.value?.validate()
       if (!res) {
-        ctx.emit('changeStep', 'submit', { ...formData.value });
+        ctx.emit('changeStep', 'submit', { ...formData.value })
       }
-    };
+    }
     const goPrev = () => {
-      ctx.emit('changeStep', 'backward');
-    };
+      ctx.emit('changeStep', 'backward')
+    }
     return {
       formData,
       formRef,
       onNextClick,
       goPrev,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

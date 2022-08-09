@@ -1,4 +1,4 @@
-@import "./custom.less";
+@import './custom.less';
 
 * {
   box-sizing: border-box;
@@ -14,13 +14,14 @@ body {
   background-color: var(--color-bg-1);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-
 }
 
 .echarts-tooltip-diy {
-  background: linear-gradient(304.17deg,
-      rgb(253 254 255 / 60%) -6.04%,
-      rgb(244 247 252 / 60%) 85.2%) !important;
+  background: linear-gradient(
+    304.17deg,
+    rgb(253 254 255 / 60%) -6.04%,
+    rgb(244 247 252 / 60%) 85.2%
+  ) !important;
   border: none !important;
 
   /* Note: backdrop-filter has minimal browser support */
@@ -73,13 +74,13 @@ body {
   border: none;
   border-radius: 4px;
 
-  &>.arco-card-header {
+  & > .arco-card-header {
     height: auto;
     padding: 20px;
     border: none;
   }
 
-  &>.arco-card-body {
+  & > .arco-card-body {
     padding: 0 20px 20px;
   }
 }

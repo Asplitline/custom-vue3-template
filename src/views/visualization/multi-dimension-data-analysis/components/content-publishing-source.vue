@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import useLoading from '@/hooks/loading';
-import useChartOption from '@/hooks/chart-option';
+import { defineComponent } from 'vue'
+import useLoading from '@/hooks/loading'
+import useChartOption from '@/hooks/chart-option'
 
 export default defineComponent({
   setup() {
@@ -23,7 +23,7 @@ export default defineComponent({
         fontSize: 14,
         lineWidth: 10,
         fontWeight: 'bold',
-      };
+      }
       return {
         legend: {
           left: 'center',
@@ -225,15 +225,15 @@ export default defineComponent({
             ],
           },
         ],
-      };
-    });
-    const { loading } = useLoading(false);
+      }
+    })
+    const { loading } = useLoading(false)
     return {
       chartOption,
       loading,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less"></style>

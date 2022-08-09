@@ -8,21 +8,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup() {
-    const router = useRouter();
+    const router = useRouter()
     const back = () => {
       // warning： Go to the node that has the permission
-      router.push({ name: 'workplace' });
-    };
+      router.push({ name: 'workplace' })
+    }
     return {
       back,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

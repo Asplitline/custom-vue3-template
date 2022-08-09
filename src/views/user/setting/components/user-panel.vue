@@ -51,18 +51,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { FileItem } from '@arco-design/web-vue/es/upload/interfaces';
-import { useUserStore } from '@/store';
+import { defineComponent, ref } from 'vue'
+import { FileItem } from '@arco-design/web-vue/es/upload/interfaces'
+import { useUserStore } from '@/store'
 
 export default defineComponent({
   setup() {
-    const userStore = useUserStore();
+    const userStore = useUserStore()
     const file = {
       uid: '-2',
       name: 'avatar.png',
       url: userStore.avatar,
-    };
+    }
     const renderData = [
       {
         label: 'userSetting.label.name',
@@ -84,18 +84,18 @@ export default defineComponent({
         label: 'userSetting.label.registrationDate',
         value: userStore.registrationDate,
       },
-    ];
-    const fileList = ref<FileItem[]>([file]);
+    ]
+    const fileList = ref<FileItem[]>([file])
     const uploadChange = (fileItemList: FileItem[], fileItem: FileItem) => {
-      fileList.value = [fileItem];
-    };
+      fileList.value = [fileItem]
+    }
     return {
       fileList,
       renderData,
       uploadChange,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

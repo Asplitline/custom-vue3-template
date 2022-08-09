@@ -26,19 +26,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   emits: ['changeStep'],
   setup(props, ctx) {
     const oneMore = () => {
-      ctx.emit('changeStep', 1);
-    };
+      ctx.emit('changeStep', 1)
+    }
     return {
       oneMore,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

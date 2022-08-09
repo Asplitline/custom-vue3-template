@@ -10,22 +10,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { useUserStore } from '@/store';
+import { defineComponent, computed } from 'vue'
+import { useUserStore } from '@/store'
 
 export default defineComponent({
   setup() {
-    const userStore = useUserStore();
+    const userStore = useUserStore()
     const userInfo = computed(() => {
       return {
         name: userStore.name,
-      };
-    });
+      }
+    })
     return {
       userInfo,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

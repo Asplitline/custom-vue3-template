@@ -36,8 +36,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
-import { EnterpriseCertificationModel } from '@/api/user-center';
+import { defineComponent, PropType, computed } from 'vue'
+import { EnterpriseCertificationModel } from '@/api/user-center'
 
 export default defineComponent({
   props: {
@@ -58,7 +58,7 @@ export default defineComponent({
         enterpriseName,
         enterpriseCertificateType,
         organizationCode,
-      } = props.enterpriseInfo;
+      } = props.enterpriseInfo
       return [
         {
           label: 'userSetting.certification.label.accountType',
@@ -96,13 +96,13 @@ export default defineComponent({
           label: 'userSetting.certification.label.organizationCode',
           value: organizationCode,
         },
-      ];
-    });
+      ]
+    })
     return {
       renderData,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

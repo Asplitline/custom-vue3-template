@@ -28,17 +28,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useUserStore } from '@/store';
+import { defineComponent } from 'vue'
+import { useUserStore } from '@/store'
 
 export default defineComponent({
   setup() {
-    const userStore = useUserStore();
+    const userStore = useUserStore()
     return {
       userInfo: userStore,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

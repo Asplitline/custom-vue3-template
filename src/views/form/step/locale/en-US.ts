@@ -63,4 +63,4 @@ export default {
   'stepForm.form.description.title': 'Channel Form Description',
   'stepForm.form.description.text':
     'Advertiser channel promotion supports tracking of users who download apps by placing ads on third-party advertisers, such as toutiao channel, and tracking users who activate apps by downloading apps through channels.',
-};
+}

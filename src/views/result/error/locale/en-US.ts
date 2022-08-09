@@ -10,4 +10,4 @@ export default {
   'error.detailLine.record.link': 'Registration Process',
   'error.detailLine.auth':
     'Your user group does not have the authority to perform this operation;',
-};
+}

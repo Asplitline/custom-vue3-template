@@ -222,11 +222,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, reactive } from 'vue';
-import { useI18n } from 'vue-i18n';
-import useLoading from '@/hooks/loading';
-import { queryPolicyList, PolicyRecord, PolicyParams } from '@/api/list';
-import { Pagination, Options } from '@/types/global';
+import { defineComponent, computed, ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
+import useLoading from '@/hooks/loading'
+import { queryPolicyList, PolicyRecord, PolicyParams } from '@/api/list'
+import { Pagination, Options } from '@/types/global'
 
 const generateFormModel = () => {
   return {
@@ -236,21 +236,21 @@ const generateFormModel = () => {
     filterType: '',
     createdTime: [],
     status: '',
-  };
-};
+  }
+}
 export default defineComponent({
   setup() {
-    const { loading, setLoading } = useLoading(true);
-    const { t } = useI18n();
-    const renderData = ref<PolicyRecord[]>([]);
-    const formModel = ref(generateFormModel());
+    const { loading, setLoading } = useLoading(true)
+    const { t } = useI18n()
+    const renderData = ref<PolicyRecord[]>([])
+    const formModel = ref(generateFormModel())
     const basePagination: Pagination = {
       current: 1,
       pageSize: 20,
-    };
+    }
     const pagination = reactive({
       ...basePagination,
-    });
+    })
     const contentTypeOptions = computed<Options[]>(() => [
       {
         label: t('searchTable.form.contentType.img'),
@@ -264,7 +264,7 @@ export default defineComponent({
         label: t('searchTable.form.contentType.verticalVideo'),
         value: 'verticalVideo',
       },
-    ]);
+    ])
     const filterTypeOptions = computed<Options[]>(() => [
       {
         label: t('searchTable.form.filterType.artificial'),
@@ -274,7 +274,7 @@ export default defineComponent({
         label: t('searchTable.form.filterType.rules'),
         value: 'rules',
       },
-    ]);
+    ])
     const statusOptions = computed<Options[]>(() => [
       {
         label: t('searchTable.form.status.online'),
@@ -284,37 +284,37 @@ export default defineComponent({
         label: t('searchTable.form.status.offline'),
         value: 'offline',
       },
-    ]);
+    ])
     const fetchData = async (
       params: PolicyParams = { current: 1, pageSize: 20 }
     ) => {
-      setLoading(true);
+      setLoading(true)
       try {
-        const { data } = await queryPolicyList(params);
-        renderData.value = data.list;
-        pagination.current = params.current;
-        pagination.total = data.total;
+        const { data } = await queryPolicyList(params)
+        renderData.value = data.list
+        pagination.current = params.current
+        pagination.total = data.total
       } catch (err) {
         // you can report use errorHandler or other
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const search = () => {
       fetchData({
         ...basePagination,
         ...formModel.value,
-      } as unknown as PolicyParams);
-    };
+      } as unknown as PolicyParams)
+    }
     const onPageChange = (current: number) => {
-      fetchData({ ...basePagination, current });
-    };
+      fetchData({ ...basePagination, current })
+    }
 
-    fetchData();
+    fetchData()
     const reset = () => {
-      formModel.value = generateFormModel();
-    };
+      formModel.value = generateFormModel()
+    }
     return {
       loading,
       search,
@@ -326,9 +326,9 @@ export default defineComponent({
       contentTypeOptions,
       filterTypeOptions,
       statusOptions,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

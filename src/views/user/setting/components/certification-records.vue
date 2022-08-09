@@ -53,22 +53,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { CertificationRecord } from '@/api/user-center';
+import { defineComponent, PropType } from 'vue'
+import { CertificationRecord } from '@/api/user-center'
 
 export default defineComponent({
   props: {
     renderData: {
       type: Array as PropType<CertificationRecord>,
       default() {
-        return [];
+        return []
       },
     },
   },
   setup() {
     //
   },
-});
+})
 </script>
 
 <style scoped lang="less">

@@ -71,8 +71,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { MessageRecord, MessageListType } from '@/api/message';
+import { defineComponent, PropType } from 'vue'
+import { MessageRecord, MessageListType } from '@/api/message'
 
 export default defineComponent({
   props: {
@@ -88,22 +88,22 @@ export default defineComponent({
   emits: ['itemClick'],
   setup(props, context) {
     const allRead = () => {
-      context.emit('itemClick', [...props.renderList]);
-    };
+      context.emit('itemClick', [...props.renderList])
+    }
 
     const onItemClick = (item: MessageRecord) => {
       if (!item.status) {
-        context.emit('itemClick', [item]);
+        context.emit('itemClick', [item])
       }
-    };
-    const showMax = 3;
+    }
+    const showMax = 3
     return {
       allRead,
       onItemClick,
       showMax,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

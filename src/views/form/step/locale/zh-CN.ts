@@ -49,4 +49,4 @@ export default {
   'stepForm.form.description.title': '渠道表单说明',
   'stepForm.form.description.text':
     '广告商渠道推广支持追踪在第三方广告商投放广告下载App用户的场景，例如在今日头条渠道投放下载App广告，追踪通过在渠道下载激活App的用户。',
-};
+}

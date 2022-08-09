@@ -126,13 +126,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { FormInstance } from '@arco-design/web-vue/es/form';
-import { BasicInfoModel } from '@/api/user-center';
+import { defineComponent, ref } from 'vue'
+import { FormInstance } from '@arco-design/web-vue/es/form'
+import { BasicInfoModel } from '@/api/user-center'
 
 export default defineComponent({
   setup() {
-    const formRef = ref<FormInstance>();
+    const formRef = ref<FormInstance>()
     const formData = ref<BasicInfoModel>({
       email: '',
       nickname: '',
@@ -140,25 +140,25 @@ export default defineComponent({
       area: '',
       address: '',
       profile: '',
-    });
+    })
     const validate = async () => {
-      const res = await formRef.value?.validate();
+      const res = await formRef.value?.validate()
       if (!res) {
         // do some thing
         // you also can use html-type to submit
       }
-    };
+    }
     const reset = async () => {
-      await formRef.value?.resetFields();
-    };
+      await formRef.value?.resetFields()
+    }
     return {
       formRef,
       formData,
       validate,
       reset,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">
