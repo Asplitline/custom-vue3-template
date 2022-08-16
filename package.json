@@ -1,5 +1,5 @@
 {
-  "name": "vue-admin-arco",
+  "name": "tpl",
   "description": "",
   "version": "1.0.1",
   "private": true,
@@ -11,7 +11,8 @@
     "lint-staged": "npx lint-staged",
     "prepare": "husky install",
     "build:normal": "vite build --config ./config/vite.config.prod.ts",
-    "format": "prettier --write . "
+    "format": "prettier --write . ",
+    "ui": "npm docs @arco-design/web-vue"
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.23.0",

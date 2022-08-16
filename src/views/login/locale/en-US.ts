@@ -1,5 +1,5 @@
 export default {
-  'login.form.title': 'Login to vue-admin-arco',
+  'login.form.title': 'Login to 智慧园林后台系统',
   'login.form.userName.errMsg': 'Username cannot be empty',
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.login.errMsg': 'Login error, refresh and try again',

@@ -61,72 +61,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { Message } from '@arco-design/web-vue'
-import { ValidatedError } from '@arco-design/web-vue/es/form/interface'
-import { useI18n } from 'vue-i18n'
-import { useUserStore } from '@/store'
+<script lang="ts" setup>
 import useLoading from '@/hooks/loading'
-import { LoginData } from '@/api/user'
+import { useUserStore } from '@/store'
+import { reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  setup() {
-    const router = useRouter()
-    const { t } = useI18n()
-    const errorMessage = ref('')
-    const { loading, setLoading } = useLoading()
-    const userStore = useUserStore()
-    const userInfo = reactive({
-      username: 'admin',
-      password: 'admin',
-    })
-    const handleSubmit = async ({
-      errors,
-      values,
-    }: {
-      errors: Record<string, ValidatedError> | undefined
-      values: LoginData
-    }) => {
-      debugger
-      if (!errors) {
-        setLoading(true)
-        try {
-          await userStore.login(values)
-          const { redirect, ...othersQuery } = router.currentRoute.value.query
-          router.push({
-            name: (redirect as string) || 'workplace',
-            query: {
-              ...othersQuery,
-            },
-          })
-          Message.success(t('login.form.login.success'))
-        } catch (err) {
-          errorMessage.value = (err as Error).message
-        } finally {
-          setLoading(false)
-        }
-      }
-    }
-    // 演示地址自动登录
-    onMounted(() => {
-      setTimeout(() => {
-        handleSubmit({ errors: undefined, values: userInfo })
-      }, 3000)
-    })
-    const setRememberPassword = () => {
-      //
-    }
-    return {
-      loading,
-      userInfo,
-      errorMessage,
-      handleSubmit,
-      setRememberPassword,
-    }
-  },
+const router = useRouter()
+const { t } = useI18n()
+const errorMessage = ref('')
+const { loading, setLoading } = useLoading()
+const userStore = useUserStore()
+const userInfo = reactive({
+  username: 'admin',
+  password: 'admin',
 })
+const handleSubmit = async ({ values, errors }) => {
+  if (errors) {
+    return
+  }
+  setLoading(true)
+  try {
+    await userStore.login(userInfo)
+  } catch (error) {
+    console.log('error: ', error)
+  } finally {
+    setLoading(false)
+  }
+}
+const setRememberPassword = () => {}
 </script>
 
 <style lang="less" scoped>

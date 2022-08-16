@@ -10,46 +10,11 @@
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
         >
-          vue-admin-arco
+          智慧园林后台系统
         </a-typography-title>
       </a-space> -->
     </div>
     <ul class="right-side">
-      <li>
-        <a-tooltip :content="$t('settings.search')">
-          <a-button class="nav-btn" type="outline" :shape="'circle'">
-            <template #icon>
-              <icon-search />
-            </template>
-          </a-button>
-        </a-tooltip>
-      </li>
-      <li>
-        <a-tooltip :content="$t('settings.language')">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="setDropDownVisible"
-          >
-            <template #icon>
-              <icon-language />
-            </template>
-          </a-button>
-        </a-tooltip>
-        <a-dropdown trigger="click" @select="changeLocale">
-          <div ref="triggerBtn" class="trigger-btn"></div>
-          <template #content>
-            <a-doption
-              v-for="item in locales"
-              :key="item.value"
-              :value="item.value"
-            >
-              {{ item.label }}
-            </a-doption>
-          </template>
-        </a-dropdown>
-      </li>
       <li>
         <a-tooltip
           :content="
@@ -71,47 +36,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
-        <a-tooltip :content="$t('settings.navbar.alerts')">
-          <div class="message-box-trigger">
-            <a-badge :count="9" dot>
-              <a-button
-                class="nav-btn"
-                type="outline"
-                :shape="'circle'"
-                @click="setPopoverVisible"
-              >
-                <icon-notification />
-              </a-button>
-            </a-badge>
-          </div>
-        </a-tooltip>
-        <a-popover
-          trigger="click"
-          :arrow-style="{ display: 'none' }"
-          :content-style="{ padding: 0, minWidth: '400px' }"
-          content-class="message-popover"
-        >
-          <div ref="refBtn" class="ref-btn"></div>
-          <template #content>
-            <message-box />
-          </template>
-        </a-popover>
-      </li>
-      <li>
-        <a-tooltip :content="$t('settings.title')">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="setVisible"
-          >
-            <template #icon>
-              <icon-settings />
-            </template>
-          </a-button>
-        </a-tooltip>
-      </li>
+
       <li>
         <a-dropdown trigger="click">
           <a-avatar :size="32" :style="{ marginRight: '8px' }">
@@ -171,12 +96,9 @@ import { useAppStore, useUserStore } from '@/store'
 import { LOCALE_OPTIONS } from '@/locale'
 import useLocale from '@/hooks/locale'
 import useUser from '@/hooks/user'
-import MessageBox from '../message-box/index.vue'
 
 export default defineComponent({
-  components: {
-    MessageBox,
-  },
+  components: {},
   setup() {
     const appStore = useAppStore()
     const userStore = useUserStore()

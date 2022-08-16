@@ -72,5 +72,7 @@ module.exports = {
     'prefer-regex-literals': 0,
     'import/no-extraneous-dependencies': 0,
     'semi': 0,
+    'vue/no-unused-components': 0,
+    'no-unreachable': 0,
   },
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { UserState } from '@/store/modules/user/types'
+import { QueryParams } from './common'
 
 export interface LoginData {
   username: string
@@ -7,10 +8,10 @@ export interface LoginData {
 }
 
 export interface LoginRes {
-  token: string
+  id: string
 }
 export function login(data: LoginData) {
-  return axios.post<LoginRes>('/api/user/login', data)
+  return axios.post<LoginRes>('/user/back/login', data)
 }
 
 export function logout() {
@@ -19,4 +20,8 @@ export function logout() {
 
 export function getUserInfo() {
   return axios.post<UserState>('/api/user/info')
+}
+
+export function getUserList(params: QueryParams) {
+  return axios.get<QueryParams>('/user/getUser', { params })
 }
