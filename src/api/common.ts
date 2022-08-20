@@ -1,5 +1,5 @@
 export interface QueryParams {
-  page: string
-  size: string
+  page: number
+  size: number
   keyword?: string
 }
