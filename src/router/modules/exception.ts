@@ -6,6 +6,7 @@ export default {
     locale: 'menu.exception',
     requiresAuth: true,
     icon: 'icon-exclamation-circle',
+    hideInMenu: true,
   },
   children: [
     {

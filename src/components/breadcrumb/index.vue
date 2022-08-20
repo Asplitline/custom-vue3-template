@@ -9,18 +9,46 @@
   </a-breadcrumb>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script lang="ts" setup>
+import { computed, defineProps, onMounted, PropType, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-export default defineComponent({
-  props: {
-    items: {
-      type: Array as PropType<string[]>,
-      default() {
-        return []
-      },
+const props = defineProps({
+  items: {
+    type: Array as PropType<string[]>,
+    default() {
+      return []
     },
   },
+})
+
+const router = useRouter()
+const route = useRoute()
+const defaultVal = reactive<string[]>([])
+
+const initData = () => {
+  const routeRouter = router.options.routes.find(
+    (i) => i.name === 'root'
+  )?.children
+  routeRouter?.forEach((e) => {
+    if (e.children) {
+      const currentRoute = e.children.find((i) => {
+        return i.name === route.name
+      })
+      if (currentRoute) {
+        defaultVal.push(e.meta?.locale as string)
+        defaultVal.push(currentRoute.meta?.locale as string)
+      }
+    }
+  })
+}
+
+const items = computed(() => {
+  return props.items.length > 0 ? props.items : defaultVal
+})
+
+onMounted(() => {
+  initData()
 })
 </script>
 

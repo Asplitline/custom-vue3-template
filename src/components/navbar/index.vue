@@ -88,7 +88,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineComponent, computed, ref } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import { useDark, useToggle } from '@vueuse/core'
@@ -97,80 +97,60 @@ import { LOCALE_OPTIONS } from '@/locale'
 import useLocale from '@/hooks/locale'
 import useUser from '@/hooks/user'
 
-export default defineComponent({
-  components: {},
-  setup() {
-    const appStore = useAppStore()
-    const userStore = useUserStore()
-    const { logout } = useUser()
-    const { changeLocale } = useLocale()
-    const locales = [...LOCALE_OPTIONS]
-    const avatar = computed(() => {
-      return userStore.avatar
-    })
-    const theme = computed(() => {
-      return appStore.theme
-    })
-    const isDark = useDark({
-      selector: 'body',
-      attribute: 'arco-theme',
-      valueDark: 'dark',
-      valueLight: 'light',
-      storageKey: 'arco-theme',
-      onChanged(dark: boolean) {
-        // overridded default behavior
-        appStore.toggleTheme(dark)
-      },
-    })
-    const toggleTheme = useToggle(isDark)
-    const setVisible = () => {
-      appStore.updateSettings({ globalSettings: true })
-    }
-    const refBtn = ref()
-    const triggerBtn = ref()
-    const setPopoverVisible = () => {
-      const event = new MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true,
-      })
-      refBtn.value.dispatchEvent(event)
-    }
-    const handleLogout = () => {
-      logout()
-    }
-    const setDropDownVisible = () => {
-      const event = new MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true,
-      })
-      triggerBtn.value.dispatchEvent(event)
-    }
-    const switchRoles = async () => {
-      const res = await userStore.switchRoles()
-      Message.success(res as string)
-    }
-    const switchGit = () => {
-      window.open('https://github.com/chuzhixin')
-    }
-    return {
-      locales,
-      theme,
-      avatar,
-      changeLocale,
-      toggleTheme,
-      setVisible,
-      setPopoverVisible,
-      refBtn,
-      triggerBtn,
-      handleLogout,
-      setDropDownVisible,
-      switchRoles,
-      switchGit,
-    }
+const appStore = useAppStore()
+const userStore = useUserStore()
+const { logout } = useUser()
+const { changeLocale } = useLocale()
+const locales = [...LOCALE_OPTIONS]
+const avatar = computed(() => {
+  return userStore.avatar
+})
+const theme = computed(() => {
+  return appStore.theme
+})
+const isDark = useDark({
+  selector: 'body',
+  attribute: 'arco-theme',
+  valueDark: 'dark',
+  valueLight: 'light',
+  storageKey: 'arco-theme',
+  onChanged(dark: boolean) {
+    // overridded default behavior
+    appStore.toggleTheme(dark)
   },
 })
+const toggleTheme = useToggle(isDark)
+const setVisible = () => {
+  appStore.updateSettings({ globalSettings: true })
+}
+const refBtn = ref()
+const triggerBtn = ref()
+const setPopoverVisible = () => {
+  const event = new MouseEvent('click', {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  })
+  refBtn.value.dispatchEvent(event)
+}
+const handleLogout = () => {
+  logout()
+}
+const setDropDownVisible = () => {
+  const event = new MouseEvent('click', {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  })
+  triggerBtn.value.dispatchEvent(event)
+}
+const switchRoles = async () => {
+  const res = await userStore.switchRoles()
+  Message.success(res as string)
+}
+const switchGit = () => {
+  window.open('https://github.com/chuzhixin')
+}
 </script>
 
 <style scoped lang="less">

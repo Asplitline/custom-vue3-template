@@ -13,6 +13,10 @@ import { Cache } from '@/utils/tools'
 import Login from './modules/login'
 import appRoutes from './modules'
 
+// const endAppRoutes = appRoutes.filter((i) => {
+//   return i.meta.hidden !== true
+// })
+
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const router = createRouter({

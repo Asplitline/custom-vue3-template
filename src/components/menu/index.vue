@@ -6,9 +6,12 @@ import {
   useRoute,
   RouteRecordRaw,
   RouteRecordNormalized,
+  RouteMeta,
 } from 'vue-router'
 import { useAppStore } from '@/store'
 import usePermission from '@/hooks/permission'
+import { jsxClosingElement } from '@babel/types'
+import { render } from 'nprogress'
 
 export default defineComponent({
   emit: ['collapse'],
@@ -28,6 +31,7 @@ export default defineComponent({
       const copyRouter = JSON.parse(JSON.stringify(appRoute.value.children))
       function travel(_routes: RouteRecordRaw[], layer: number) {
         if (!_routes) return null
+
         const collector: any = _routes.map((element) => {
           // no access
           if (!permission.accessRouter(element)) {
@@ -130,8 +134,13 @@ export default defineComponent({
         }
         return nodes
       }
-      return travel(menuTree.value)
+
+      const endMenuTree = menuTree.value.filter(
+        (i: any) => i.meta?.hideInMenu !== true
+      )
+      return travel(endMenuTree)
     }
+
     return () => (
       <a-menu
         theme="dark"
