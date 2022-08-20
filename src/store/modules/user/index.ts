@@ -1,69 +1,48 @@
 import { defineStore } from 'pinia'
-import {
-  login as userLogin,
-  logout as userLogout,
-  getUserInfo,
-  LoginData,
-} from '@/api/user'
+import { login as userLogin, logout as userLogout, LoginData } from '@/api/user'
 import { setToken, clearToken } from '@/utils/auth'
+import { Cache, isEmpty } from '@/utils/tools'
 import { UserState } from './types'
 
 const useUserStore = defineStore('user', {
-  state: (): UserState => ({
-    name: undefined,
-    avatar: undefined,
-    job: undefined,
-    organization: undefined,
-    location: undefined,
-    email: undefined,
-    introduction: undefined,
-    personalWebsite: undefined,
-    jobName: undefined,
-    organizationName: undefined,
-    locationName: undefined,
-    phone: undefined,
-    registrationDate: undefined,
-    accountId: undefined,
-    certification: undefined,
-    role: '',
+  state: (): { token: string; info: UserState } => ({
+    token: Cache.get('token'),
+    info: Cache.get('info'),
   }),
 
   getters: {
-    userInfo(state: UserState): UserState {
-      return { ...state }
+    isLogin: (state) => {
+      return !isEmpty(state.token)
     },
   },
 
   actions: {
-    switchRoles() {
-      return new Promise((resolve) => {
-        this.role = this.role === 'user' ? 'admin' : 'user'
-        resolve(this.role)
-      })
-    },
+    // switchRoles() {
+    //   return new Promise((resolve) => {
+    //     this.role = this.role === 'user' ? 'admin' : 'user'
+    //     resolve(this.role)
+    //   })
+    // },
     // Set user's information
-    setInfo(partial: Partial<UserState>) {
-      this.$patch(partial)
-    },
+    // setInfo(info: any) {
+    //   this.info = info
+    // },
 
     // Reset user's information
     resetInfo() {
       this.$reset()
     },
 
-    // Get user's information
-    async info() {
-      // const res = await getUserInfo()
-      // this.setInfo(res.data)
-    },
-
     // Login
     async login(loginForm: LoginData) {
       try {
         const res = await userLogin(loginForm)
-        setToken(res.data.id)
+        this.info = res.data
+        Cache.set('info', res.data)
+        Cache.set('token', res.data.id)
       } catch (err) {
-        clearToken()
+        Cache.remove('token')
+        Cache.remove('info')
         throw err
       }
     },

@@ -75,7 +75,7 @@ const { loading, setLoading } = useLoading()
 const userStore = useUserStore()
 const userInfo = reactive({
   username: 'admin',
-  password: 'admin',
+  password: '123456',
 })
 const handleSubmit = async ({ values, errors }) => {
   if (errors) {
@@ -84,13 +84,13 @@ const handleSubmit = async ({ values, errors }) => {
   setLoading(true)
   try {
     await userStore.login(userInfo)
+    console.log('111 :', 111)
   } catch (error) {
     console.log('error: ', error)
   } finally {
     setLoading(false)
   }
 }
-const setRememberPassword = () => {}
 </script>
 
 <style lang="less" scoped>

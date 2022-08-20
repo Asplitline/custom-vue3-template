@@ -9,7 +9,7 @@ import 'nprogress/nprogress.css'
 import usePermission from '@/hooks/permission'
 import { useUserStore } from '@/store'
 import PageLayout from '@/layout/page-layout.vue'
-import { isLogin } from '@/utils/auth'
+import { Cache } from '@/utils/tools'
 import Login from './modules/login'
 import appRoutes from './modules'
 
@@ -43,44 +43,16 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
   const userStore = useUserStore()
-  async function crossroads() {
-    const Permission = usePermission()
-    if (Permission.accessRouter(to)) await next()
-    else {
-      const destination = Permission.findFirstPermissionRoute(
-        appRoutes,
-        userStore.role
-      ) || {
-        name: 'notFound',
-      }
-      await next(destination)
+  const { info, isLogin } = userStore
+
+  if (isLogin) {
+    if (to.name === 'login') {
+      next({ name: 'user' })
+    } else {
+      next()
     }
     NProgress.done()
-  }
-  if (isLogin()) {
-    if (userStore.role) {
-      crossroads()
-    } else {
-      try {
-        await userStore.info()
-        crossroads()
-      } catch (error) {
-        next({
-          name: 'login',
-          query: {
-            redirect: to.name,
-            ...to.query,
-          } as LocationQueryRaw,
-        })
-        NProgress.done()
-      }
-    }
   } else {
-    if (to.name === 'login') {
-      next()
-      NProgress.done()
-      return
-    }
     next({
       name: 'login',
       query: {
@@ -90,6 +62,58 @@ router.beforeEach(async (to, from, next) => {
     })
     NProgress.done()
   }
+  // next()
+  // async function crossroads() {
+  //   const Permission = usePermission()
+  //   if (Permission.accessRouter(to)) await next()
+  //   else {
+  //     const destination = Permission.findFirstPermissionRoute(
+  //       appRoutes,
+  //       userStore.role
+  //     ) || {
+  //       name: 'notFound',
+  //     }
+  //     await next(destination)
+  //   }
+  //   NProgress.done()
+  // }
+  // try {
+  //   if (isLogin()) {
+  //     if (userStore.role) {
+  //       crossroads()
+  //     } else {
+  //       try {
+  //         await userStore.info()
+  //         crossroads()
+  //       } catch (error) {
+  //         next({
+  //           name: 'login',
+  //           query: {
+  //             redirect: to.name,
+  //             ...to.query,
+  //           } as LocationQueryRaw,
+  //         })
+  //         NProgress.done()
+  //       }
+  //     }
+  //   } else {
+  //     if (to.name === 'login') {
+  //       next()
+  //       NProgress.done()
+  //       return
+  //     }
+  //     next({
+  //       name: 'login',
+  //       query: {
+  //         redirect: to.name,
+  //         ...to.query,
+  //       } as LocationQueryRaw,
+  //     })
+  //     NProgress.done()
+  //   }
+  // } catch (error) {
+  //   next()
+  // }
 })
 
 export default router

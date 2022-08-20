@@ -1,5 +1,4 @@
-import axios from 'axios'
-import { UserState } from '@/store/modules/user/types'
+import service, { handleQuery } from './index'
 import { QueryParams } from './common'
 
 export interface LoginData {
@@ -11,17 +10,17 @@ export interface LoginRes {
   id: string
 }
 export function login(data: LoginData) {
-  return axios.post<LoginRes>('/user/back/login', data)
+  return service.post<LoginRes>(`/user/back/login${handleQuery(data)}`)
 }
 
 export function logout() {
-  return axios.post<LoginRes>('/api/user/logout')
+  return service.post<LoginRes>('/api/user/logout')
 }
 
-export function getUserInfo() {
-  return axios.post<UserState>('/api/user/info')
-}
+// export function getUserInfo() {
+//   return service.post<UserState>('/api/user/info')
+// }
 
 export function getUserList(params: QueryParams) {
-  return axios.get<QueryParams>('/user/getUser', { params })
+  return service.get<QueryParams>('/user/getUser', { params })
 }
