@@ -3,6 +3,7 @@
 import Exception from './exception'
 import User from './user'
 import Config from './config'
+import Trade from './trade'
 /** simple end */
 
 export default [
@@ -10,5 +11,6 @@ export default [
   Exception,
   Config,
   User,
+  Trade,
   /** simple end */
 ]

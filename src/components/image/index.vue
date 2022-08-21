@@ -18,6 +18,7 @@ const endSrc = computed(() => {
     ? props.src
     : (import.meta.env.VITE_API_URL as string) + props.src
 })
+console.log('endSrc :', endSrc)
 </script>
 
 <style lang="scss" scoped></style>

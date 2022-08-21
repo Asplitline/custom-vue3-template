@@ -13,6 +13,7 @@ export default function useUpload(formModel, filed = 'img') {
         // url: URL.createObjectURL(currentFile.file),
       }
     }
+    console.log('file.value', file.value)
   }
   const customRequest = (option: any): UploadRequest => {
     const { fileItem } = option
@@ -22,9 +23,9 @@ export default function useUpload(formModel, filed = 'img') {
     } else {
       const updateUrl = async () => {
         const formData = new FormData()
-        formData.append('file', fileItem.file)
+        formData.append('files', fileItem.file)
         const res = await uploadImg(formData)
-        formModel.value[filed] = res.data
+        formModel.value[filed] = res
       }
       updateUrl()
     }

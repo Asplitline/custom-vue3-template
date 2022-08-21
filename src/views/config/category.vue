@@ -18,25 +18,18 @@
         row-key="id"
         :loading="loading"
         :pagination="pagination"
-        :data="renderData"
+        :data="filterTableData"
         :bordered="false"
         @page-change="onPageChange"
       >
         <template #columns>
-          <a-table-column title="轮播图" data-index="url">
+          <a-table-column title="图标" data-index="icon">
             <template #cell="{ record }">
-              <cs-image width="60" height="60" :src="record.url"></cs-image>
+              <cs-image width="60" height="60" :src="record.icon"></cs-image>
             </template>
           </a-table-column>
-          <a-table-column title="标题" data-index="title" />
+          <a-table-column title="标题" data-index="name" />
           <a-table-column title="描述" data-index="description" :width="400" />
-          <a-table-column title="状态" data-index="status">
-            <template #cell="{ record }">
-              <a-tag :color="record.status !== '1' ? 'green' : 'red'">
-                {{ record.status !== '1' ? '有效' : '失效' }}
-              </a-tag>
-            </template>
-          </a-table-column>
           <a-table-column title="创建时间" data-index="ctime">
             <template #cell="{ record }"> {{ format(record.ctime) }} </template>
           </a-table-column>
@@ -50,7 +43,8 @@
                 修改
               </a-button>
               <a-popconfirm
-                :content="`是否确定要删除: ${record.title}`"
+                v-if="record.pid"
+                :content="`是否确定要删除: ${record.name}`"
                 @ok="deleteData(record.id)"
               >
                 <a-button type="text" status="danger" size="small">
@@ -68,19 +62,33 @@
       @before-ok="confirmModal"
       @before-close="clearModal"
     >
-      <template #title>{{ isEdit ? '修改轮播图' : '新增轮播图' }} </template>
+      <template #title>{{ isEdit ? '修改分类' : '新增分类' }} </template>
       <div>
         <a-form ref="formRef" :model="formModel" :rules="formRules">
-          <a-form-item field="title" label="标题">
-            <a-input v-model="formModel.title" placeholder="请输入轮播图标题" />
+          <a-form-item field="pid" label="父级分类">
+            <a-select
+              :model-value="formModel.pid"
+              :style="{ width: '100%' }"
+              placeholder="请选择父级分类"
+            >
+              <a-option
+                v-for="option in parents"
+                :key="option.id"
+                :value="option.id"
+                >{{ option.name }}</a-option
+              >
+            </a-select>
+          </a-form-item>
+          <a-form-item field="name" label="标题">
+            <a-input v-model="formModel.name" placeholder="请输入分类标题" />
           </a-form-item>
           <a-form-item field="description" label="描述">
             <a-input
               v-model="formModel.description"
-              placeholder="请输入轮播图描述"
+              placeholder="请输入分类描述"
             />
           </a-form-item>
-          <a-form-item field="img" label="轮播图">
+          <a-form-item field="icon" label="分类">
             <a-upload
               :file-list="file ? [file] : []"
               :show-file-list="false"
@@ -100,7 +108,8 @@
                     v-if="file && file.url"
                     class="arco-upload-list-picture custom-upload-avatar"
                   >
-                    <img :src="file.url" />
+                    <cs-image v-if="!file.uid" :src="file.url" />
+                    <img v-else :src="file.url" />
                     <div class="arco-upload-list-picture-mask">
                       <IconEdit />
                     </div>
@@ -142,18 +151,18 @@
 
 <script lang="ts" setup>
 import {
-  getCarouselList,
-  deleteCarouselById,
-  updateCarousel,
-  addCarousel,
-} from '@/api/carousel'
+  getCategoryList,
+  deleteCategoryById,
+  updateCategory,
+  addCategory,
+} from '@/api/category'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
 import { deepClone } from '@/utils/tools'
-import { inject, onMounted, reactive, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
 const {
@@ -163,19 +172,44 @@ const {
   cancelModal: _cancelModal,
   clearModal: _clearModal,
 } = useModal()
-const { customRequest, file, onChange, onProgress } = useUpload(formModel)
+const { customRequest, file, onChange, onProgress } = useUpload(
+  formModel,
+  'icon'
+)
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getCarouselList, deleteCarouselById)
+  useTable(getCategoryList, deleteCategoryById, {
+    searchDefault: {
+      page: 1,
+      size: 9999,
+      keyword: '',
+    },
+    paginationDefault: {
+      total: 1,
+      current: 1,
+      pageSize: 9999,
+    },
+  })
 
 const formRules = reactive({
-  title: [{ required: true, message: '请输入轮播图标题' }],
-  description: [{ required: true, message: '请输入轮播图描述' }],
+  name: [{ required: true, message: '请输入分类标题' }],
+  description: [{ required: true, message: '请输入分类描述' }],
+  icon: [{ required: true, message: '请选择分类图标' }],
   // img: [{ required: true, message: '请选择链图标' }],
 })
 
-const showModal = (row?: any) => _showModal(formModel, row)
+const showModal = (row?: any) => {
+  _showModal(formModel, () => {
+    // file.url = row.icon
+    try {
+      file.value = { url: row.icon }
+      formModel.value = deepClone(row)
+    } catch (error) {
+      console.log('error :', error)
+    }
+  })
+}
 const cancelModal = () =>
   _cancelModal(() => {
     file.value = null
@@ -188,15 +222,37 @@ const reload = () => {
   fetchData()
 }
 
+const parents = computed(() => {
+  if (renderData.value.length === 0) return []
+  const pids = renderData.value.map((i) => i.pid).filter((i) => i)
+  const endPids = Array.from(new Set(pids))
+  return endPids.map((i) => {
+    const parent = renderData.value.find((j) => j.id === i)
+    return parent
+  })
+})
+
+const filterTableData = computed(() => {
+  if (parents.value.length === 0) return []
+  const result = parents.value.map((i) => {
+    const children = renderData.value.filter((j) => j.pid === i.id)
+    return {
+      ...i,
+      children,
+    }
+  })
+  return result
+})
+
 const submitForm = () => {
   formRef.value.validate(async (err) => {
     if (err) return
     if (isEdit.value) {
-      const { success } = await updateCarousel(formModel.value)
-      handleCode(success, ['修改轮播图成功', '修改轮播图失败'], () => reload())
+      const { success } = await updateCategory(formModel.value)
+      handleCode(success, ['修改分类成功', '修改分类失败'], () => reload())
     } else {
-      const { success } = await addCarousel(formModel.value)
-      handleCode(success, ['添加轮播图成功', '添加轮播图失败'], () => reload())
+      const { success } = await addCategory(formModel.value)
+      handleCode(success, ['添加分类成功', '添加分类失败'], () => reload())
     }
   })
 }
