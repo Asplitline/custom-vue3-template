@@ -58,6 +58,7 @@ export default function useTable(
 
       if (success) {
         Message.success('删除成功')
+        fetchData()
       } else {
         Message.error('删除失败')
       }

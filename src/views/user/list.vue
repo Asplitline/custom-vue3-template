@@ -64,7 +64,7 @@
               </a-button>
               <a-popconfirm
                 :content="`是否确定要删除: ${record.name}`"
-                @ok="handleDelete(record.id)"
+                @ok="deleteData(record.id)"
               >
                 <a-button type="text" status="danger" size="small">
                   删除
@@ -81,34 +81,27 @@
 <script lang="ts" setup>
 import { deleteUserById, getUserList } from '@/api/user'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
+import useForm from '@/hooks/useForm'
+import useModal from '@/hooks/useModal'
 import useTable from '@/hooks/useTable'
 import { inject, onMounted, reactive } from 'vue'
 
-const showModal = () => {}
-const handleDelete = async (id) => {
-  try {
-    const res = await deleteUserById({ id })
-    console.log('res: ', res)
-  } catch (error) {
-    console.log('error: ', error)
-  }
-}
+const { formRef, formModel, resetForm } = useForm()
+const {
+  isEdit,
+  modalVisible,
+  showModal: _showModal,
+  cancelModal: _cancelModal,
+  clearModal: _clearModal,
+} = useModal()
 const format = inject('formateDate')
 const expandable = reactive({
   title: '#',
   width: 80,
 })
-const {
-  pagination,
-  searchModel,
-  renderData,
-  fetchData,
-  onPageChange,
-  loading,
-  search,
-  reset,
-  deleteData,
-} = useTable(getUserList, deleteUserById)
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
+  useTable(getUserList, deleteUserById)
+
 const handleRow = (row) => {
   const res = [
     { label: '账号', value: row.username },

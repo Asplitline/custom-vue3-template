@@ -1,9 +1,10 @@
 export default {
   path: 'user',
   name: 'user',
+  redirect: { name: 'user-list' },
   component: () => import('@/views/user/index.vue'),
   meta: {
-    locale: '个人中心',
+    locale: '用户管理',
     icon: 'icon-user',
     requiresAuth: true,
   },
