@@ -4,7 +4,7 @@ import { Message } from '@arco-design/web-vue'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_URL as string,
-  timeout: 10000,
+  timeout: 1000,
   validateStatus() {
     return true
   },
@@ -29,6 +29,7 @@ service.interceptors.request.use(
     return config
   },
   (error) => {
+    console.log('error: ', error)
     return Promise.reject(error)
   }
 )
@@ -44,8 +45,9 @@ service.interceptors.response.use(
   },
   (error) => {
     // 错误抛到业务代码
-    error.data = {}
-    error.data.msg = '请求超时或服务器异常'
+    if (error.message.indexOf('timeout') !== -1) {
+      Message.error('服务器繁忙')
+    }
     return Promise.reject(error)
   }
 )

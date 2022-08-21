@@ -1,5 +1,5 @@
 import service, { handleQuery } from './index'
-import { QueryParams } from './common'
+import { QueryDeleteParams, QueryParams } from './common'
 
 export interface LoginData {
   username: string
@@ -23,4 +23,8 @@ export function logout() {
 
 export function getUserList(params: QueryParams) {
   return service.get<QueryParams>('/user/getUser', { params })
+}
+
+export function deleteUserById(params: QueryDeleteParams) {
+  return service.delete('/user/deleteUser', { params })
 }

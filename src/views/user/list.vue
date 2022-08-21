@@ -20,8 +20,16 @@
         :pagination="pagination"
         :data="renderData"
         :bordered="false"
-        @page-change="(number) => onPageChange"
+        :expandable="expandable"
+        @page-change="onPageChange"
       >
+        <template #expand-row="{ record }">
+          <a-descriptions
+            class="desc"
+            :data="handleRow(record)"
+            :column="1"
+          ></a-descriptions>
+        </template>
         <template #columns>
           <a-table-column title="头像" data-index="url">
             <template #cell="{ record }">
@@ -42,15 +50,18 @@
               <a-tag v-else color="green">正常</a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="创建时间" data-index="ctime" />
-          <a-table-column title="更新时间" data-index="utime" />
+          <a-table-column title="创建时间" data-index="ctime">
+            <template #cell="{ record }"> {{ format(record.ctime) }} </template>
+          </a-table-column>
+          <a-table-column title="更新时间" data-index="utime">
+            <template #cell="{ record }"> {{ format(record.utime) }} </template>
+          </a-table-column>
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
               <a-button type="text" size="small" @click="showModal(record)">
                 修改
               </a-button>
-
               <a-popconfirm
                 :content="`是否确定要删除: ${record.name}`"
                 @ok="handleDelete(record.id)"
@@ -68,15 +79,25 @@
 </template>
 
 <script lang="ts" setup>
-import { getUserList } from '@/api/user'
+import { deleteUserById, getUserList } from '@/api/user'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useTable from '@/hooks/useTable'
-import { onMounted, ref } from 'vue'
+import { inject, onMounted, reactive } from 'vue'
 
-const formModel = ref({})
 const showModal = () => {}
-const handleDelete = () => {}
-
+const handleDelete = async (id) => {
+  try {
+    const res = await deleteUserById({ id })
+    console.log('res: ', res)
+  } catch (error) {
+    console.log('error: ', error)
+  }
+}
+const format = inject('formateDate')
+const expandable = reactive({
+  title: '#',
+  width: 80,
+})
 const {
   pagination,
   searchModel,
@@ -86,10 +107,27 @@ const {
   loading,
   search,
   reset,
-} = useTable(getUserList)
+  deleteData,
+} = useTable(getUserList, deleteUserById)
+const handleRow = (row) => {
+  const res = [
+    { label: '账号', value: row.username },
+    { label: '昵称', value: row.name },
+    { label: '电子邮箱', value: row.email },
+    { label: '性别', value: row.state === '0' ? '男' : '女' },
+    { label: 'QQ', value: row.qq },
+    { label: '手机号', value: row.phone },
+    { label: '个人简介', value: row.description },
+  ]
+  return res
+}
 onMounted(() => {
   fetchData()
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="less" scoped>
+.desc {
+  padding-left: 60px;
+}
+</style>

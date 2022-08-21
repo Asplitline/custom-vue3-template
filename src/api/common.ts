@@ -3,3 +3,7 @@ export interface QueryParams {
   size: number
   keyword?: string
 }
+
+export interface QueryDeleteParams {
+  id: string | number
+}

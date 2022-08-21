@@ -1,8 +1,8 @@
 import { resolve } from 'path'
-import { PaginationProps } from '@arco-design/web-vue'
+import { Message, PaginationProps } from '@arco-design/web-vue'
 import { ref } from 'vue'
 import { deepClone } from '@/utils/tools'
-import { QueryParams } from '../api/common'
+import { QueryDeleteParams, QueryParams } from '../api/common'
 import useLoading from './loading'
 
 interface TableOptions {
@@ -23,6 +23,7 @@ const paginationDef = {
 
 export default function useTable(
   fetchApi: (params: QueryParams) => any,
+  deleteApi?: (params: QueryDeleteParams) => any,
   options: TableOptions = {}
 ) {
   const { searchDefault = searchModelDef, paginationDefault = paginationDef } =
@@ -51,6 +52,20 @@ export default function useTable(
     }
   }
 
+  const deleteData = async (id: string | number) => {
+    try {
+      const { success } = await deleteApi?.({ id })
+
+      if (success) {
+        Message.success('删除成功')
+      } else {
+        Message.error('删除失败')
+      }
+    } catch (error) {
+      Message.error('删除失败')
+    }
+  }
+
   const search = () => {
     fetchData()
   }
@@ -62,7 +77,7 @@ export default function useTable(
   }
 
   const onPageChange = (number: number) => {
-    pagination.value.current = number
+    searchModel.value.page = number
     fetchData()
   }
 
@@ -75,5 +90,6 @@ export default function useTable(
     loading,
     search,
     reset,
+    deleteData,
   }
 }
