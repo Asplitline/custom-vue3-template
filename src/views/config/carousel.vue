@@ -100,7 +100,8 @@
                     v-if="file && file.url"
                     class="arco-upload-list-picture custom-upload-avatar"
                   >
-                    <img :src="file.url" />
+                    <cs-image v-if="!file.uid" :src="file.url" />
+                    <img v-else :src="file.url" />
                     <div class="arco-upload-list-picture-mask">
                       <IconEdit />
                     </div>
@@ -163,7 +164,10 @@ const {
   cancelModal: _cancelModal,
   clearModal: _clearModal,
 } = useModal()
-const { customRequest, file, onChange, onProgress } = useUpload(formModel)
+const { customRequest, file, onChange, onProgress } = useUpload(
+  formModel,
+  'url'
+)
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
@@ -172,10 +176,20 @@ const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
 const formRules = reactive({
   title: [{ required: true, message: '请输入轮播图标题' }],
   description: [{ required: true, message: '请输入轮播图描述' }],
-  // img: [{ required: true, message: '请选择链图标' }],
+  url: [{ required: true, message: '请选择轮播图' }],
 })
 
-const showModal = (row?: any) => _showModal(formModel, row)
+const showModal = (row?: any) => {
+  _showModal(formModel, () => {
+    if (row) {
+      isEdit.value = true
+      file.value = { url: row.url }
+      formModel.value = deepClone(row)
+    } else {
+      isEdit.value = false
+    }
+  })
+}
 const cancelModal = () =>
   _cancelModal(() => {
     file.value = null

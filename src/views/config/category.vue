@@ -67,9 +67,10 @@
         <a-form ref="formRef" :model="formModel" :rules="formRules">
           <a-form-item field="pid" label="父级分类">
             <a-select
-              :model-value="formModel.pid"
+              v-model="formModel.pid"
               :style="{ width: '100%' }"
               placeholder="请选择父级分类"
+              :disabled="!formModel.pid && isEdit"
             >
               <a-option
                 v-for="option in parents"
@@ -196,17 +197,16 @@ const formRules = reactive({
   name: [{ required: true, message: '请输入分类标题' }],
   description: [{ required: true, message: '请输入分类描述' }],
   icon: [{ required: true, message: '请选择分类图标' }],
-  // img: [{ required: true, message: '请选择链图标' }],
 })
 
 const showModal = (row?: any) => {
   _showModal(formModel, () => {
-    // file.url = row.icon
-    try {
+    if (row) {
+      isEdit.value = true
       file.value = { url: row.icon }
       formModel.value = deepClone(row)
-    } catch (error) {
-      console.log('error :', error)
+    } else {
+      isEdit.value = false
     }
   })
 }

@@ -8,11 +8,12 @@ export default function useModal() {
   const showModal = (formModel, row) => {
     modalVisible.value = true
     if (typeof row === 'function') {
-      isEdit.value = true
       row()
     } else if (row) {
       isEdit.value = true
       formModel.value = deepClone(row)
+    } else {
+      isEdit.value = false
     }
   }
   const cancelModal = (cancalFunc?: () => void) => {

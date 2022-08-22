@@ -21,6 +21,13 @@ export function logout() {
 //   return service.post<UserState>('/api/user/info')
 // }
 
+export function addUser(data: any) {
+  return service.post<QueryParams>('/user/login', data)
+}
+export function updateUser(data: any) {
+  return service.put<QueryParams>('/user/updateUser', data)
+}
+
 export function getUserList(params: QueryParams) {
   return service.get<QueryParams>('/user/getUser', { params })
 }
