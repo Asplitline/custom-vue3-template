@@ -22,33 +22,20 @@
         :bordered="false"
         @page-change="onPageChange"
       >
-        <template #expand-row="{ record }">
-          <a-descriptions
-            class="desc"
-            :data="handleRow(record)"
-            :column="1"
-          ></a-descriptions>
-        </template>
         <template #columns>
-          <a-table-column title="头像" data-index="url">
+          <a-table-column title="植物插图" data-index="url">
             <template #cell="{ record }">
               <cs-image width="60" height="60" :src="record.url"></cs-image>
             </template>
           </a-table-column>
-          <a-table-column title="用户名" data-index="username" />
-          <a-table-column title="昵称" data-index="name" />
-          <a-table-column title="身份" data-index="level">
-            <template #cell="{ record }">
-              <a-tag v-if="record.level == 1" color="red">管理员 </a-tag>
-              <a-tag v-else color="blue">小程序用户</a-tag>
-            </template>
+          <a-table-column title="植物名称" data-index="name" />
+          <a-table-column title="植物分类" data-index="type" />
+          <a-table-column title="植物价格" data-index="price" />
+          <a-table-column title="种植地点" data-index="address" />
+          <a-table-column title="当前库存" data-index="num" />
+          <a-table-column title="售卖状态" data-index="status">
           </a-table-column>
-          <a-table-column title="状态" data-index="state">
-            <template #cell="{ record }">
-              <a-tag v-if="record.state == 1" color="red">异常 </a-tag>
-              <a-tag v-else color="green">正常</a-tag>
-            </template>
-          </a-table-column>
+
           <a-table-column title="创建时间" data-index="ctime">
             <template #cell="{ record }"> {{ format(record.ctime) }} </template>
           </a-table-column>
@@ -78,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { deleteUserById, getUserList } from '@/api/user'
+import { deletePlantById, getPlantList } from '@/api/plant'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
@@ -96,7 +83,7 @@ const {
 const format = inject('formateDate')
 
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getUserList, deleteUserById)
+  useTable(getPlantList, deletePlantById)
 
 onMounted(() => {
   fetchData()

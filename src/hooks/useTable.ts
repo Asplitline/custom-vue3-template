@@ -36,7 +36,7 @@ export default function useTable(
 
   const renderData = ref([])
 
-  const fetchData = async () => {
+  const fetchData = async (callback?: () => void) => {
     try {
       setLoading(true)
       const { list, total, pageSize, pageNum } = await fetchApi?.(
@@ -44,6 +44,7 @@ export default function useTable(
       )
       Object.assign(pagination.value, { total, current: pageNum, pageSize })
       renderData.value = list
+      callback?.()
     } catch (error) {
       //
       console.log('error: ', error)
@@ -52,13 +53,13 @@ export default function useTable(
     }
   }
 
-  const deleteData = async (id: string | number) => {
+  const deleteData = async (id: string | number, callback?: () => void) => {
     try {
       const { success } = await deleteApi?.({ id })
-
       if (success) {
         Message.success('删除成功')
         fetchData()
+        callback?.()
       } else {
         Message.error('删除失败')
       }

@@ -34,3 +34,5 @@ export default class Cache {
     }
   }
 }
+
+export function updateAction() {}

@@ -18,7 +18,7 @@
         row-key="id"
         :loading="loading"
         :pagination="pagination"
-        :data="renderData"
+        :data="newRenderData"
         :bordered="false"
         @page-change="onPageChange"
       >
@@ -29,7 +29,14 @@
             </template>
           </a-table-column>
           <a-table-column title="标题" data-index="title" />
-          <a-table-column title="分类" data-index="lx" />
+          <a-table-column title="分类" data-index="lx">
+            <template #cell="{ record }">
+              <a-tag v-if="record.category?.name" color="blue">{{
+                record.category.name
+              }}</a-tag>
+              <a-tag v-else color="gray"> 未知分类 </a-tag>
+            </template>
+          </a-table-column>
           <a-table-column title="创建时间" data-index="ctime">
             <template #cell="{ record }"> {{ format(record.ctime) }} </template>
           </a-table-column>
@@ -39,12 +46,12 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="skip(record.id)">
+              <a-button type="text" size="small" @click="skipDetail(record)">
                 修改
               </a-button>
               <a-popconfirm
                 :content="`是否确定要删除: ${record.title}`"
-                @ok="deleteData(record.id)"
+                @ok="deleteData(record.id, fetchCategory)"
               >
                 <a-button type="text" status="danger" size="small">
                   删除
@@ -59,17 +66,21 @@
 </template>
 
 <script lang="ts" setup>
+import { getAllCategory } from '@/api/category'
 import { deleteContentById, getContentList } from '@/api/content'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useTable from '@/hooks/useTable'
-import { inject, onMounted } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCacheStore } from '@/store'
 
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
   useTable(getContentList, deleteContentById)
 
 const router = useRouter()
+const cacheStore = useCacheStore()
 const format = inject('formateDate')
+const newRenderData = ref()
 const skip = (id: any) => {
   if (id) {
     router.push({ name: 'up-popular-science', params: { id } })
@@ -78,8 +89,24 @@ const skip = (id: any) => {
   }
 }
 
-onMounted(() => {
-  fetchData()
+const fetchCategory = async () => {
+  const { data } = await getAllCategory()
+  newRenderData.value = renderData.value.map((i) => {
+    const category = data.find((j) => j.id === i.lx)
+    return {
+      ...i,
+      category,
+    }
+  })
+}
+
+const skipDetail = (record: any) => {
+  cacheStore.setPopularScience(record)
+  skip(record.id)
+}
+onMounted(async () => {
+  await fetchData()
+  fetchCategory()
 })
 </script>
 

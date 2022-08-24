@@ -1,6 +1,9 @@
 import service, { handleQuery } from './index'
 import { QueryDeleteParams, QueryParams } from './common'
 
+export function getAllCategory() {
+  return service.get('/apiLx/list')
+}
 export function getCategoryList(params: QueryParams) {
   return service.get<QueryParams>('/apiLx/pageList', { params })
 }
