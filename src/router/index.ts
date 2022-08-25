@@ -48,7 +48,8 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start()
   const userStore = useUserStore()
   const { info, isLogin } = userStore
-
+  console.log('isLogin: ', isLogin)
+  console.log('to.name: ', to.name)
   if (isLogin) {
     if (to.name === 'login') {
       next({ name: 'user' })
@@ -57,67 +58,19 @@ router.beforeEach(async (to, from, next) => {
     }
     NProgress.done()
   } else {
-    next({
-      name: 'login',
-      query: {
-        redirect: to.name,
-        ...to.query,
-      } as LocationQueryRaw,
-    })
+    if (to.name !== 'login') {
+      next({
+        name: 'login',
+        query: {
+          redirect: to.name,
+          ...to.query,
+        } as LocationQueryRaw,
+      })
+    } else {
+      next()
+    }
     NProgress.done()
   }
-  // next()
-  // async function crossroads() {
-  //   const Permission = usePermission()
-  //   if (Permission.accessRouter(to)) await next()
-  //   else {
-  //     const destination = Permission.findFirstPermissionRoute(
-  //       appRoutes,
-  //       userStore.role
-  //     ) || {
-  //       name: 'notFound',
-  //     }
-  //     await next(destination)
-  //   }
-  //   NProgress.done()
-  // }
-  // try {
-  //   if (isLogin()) {
-  //     if (userStore.role) {
-  //       crossroads()
-  //     } else {
-  //       try {
-  //         await userStore.info()
-  //         crossroads()
-  //       } catch (error) {
-  //         next({
-  //           name: 'login',
-  //           query: {
-  //             redirect: to.name,
-  //             ...to.query,
-  //           } as LocationQueryRaw,
-  //         })
-  //         NProgress.done()
-  //       }
-  //     }
-  //   } else {
-  //     if (to.name === 'login') {
-  //       next()
-  //       NProgress.done()
-  //       return
-  //     }
-  //     next({
-  //       name: 'login',
-  //       query: {
-  //         redirect: to.name,
-  //         ...to.query,
-  //       } as LocationQueryRaw,
-  //     })
-  //     NProgress.done()
-  //   }
-  // } catch (error) {
-  //   next()
-  // }
 })
 
 export default router

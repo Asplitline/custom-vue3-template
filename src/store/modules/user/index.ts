@@ -1,3 +1,4 @@
+import { removeAction, updateAction } from '@/store/utils'
 import { defineStore } from 'pinia'
 import { login as userLogin, logout as userLogout, LoginData } from '@/api/user'
 import { setToken, clearToken } from '@/utils/auth'
@@ -17,42 +18,28 @@ const useUserStore = defineStore('user', {
   },
 
   actions: {
-    // switchRoles() {
-    //   return new Promise((resolve) => {
-    //     this.role = this.role === 'user' ? 'admin' : 'user'
-    //     resolve(this.role)
-    //   })
-    // },
-    // Set user's information
-    // setInfo(info: any) {
-    //   this.info = info
-    // },
-
-    // Reset user's information
     resetInfo() {
       this.$reset()
+      removeAction(this, 'info')
+      removeAction(this, 'token')
     },
 
     // Login
     async login(loginForm: LoginData) {
       try {
         const res = await userLogin(loginForm)
-        this.info = res.data
-        Cache.set('info', res.data)
-        Cache.set('token', res.data.id)
-      } catch (err) {
-        Cache.remove('token')
-        Cache.remove('info')
-        throw err
+        updateAction(this, 'info', res.data)
+        updateAction(this, 'token', res.data.id)
+      } catch (error) {
+        removeAction(this, 'info')
+        removeAction(this, 'token')
       }
     },
 
     // Logout
     async logout() {
       await userLogout()
-
       this.resetInfo()
-      clearToken()
     },
   },
 })

@@ -84,7 +84,7 @@ const handleSubmit = async ({ values, errors }) => {
   setLoading(true)
   try {
     await userStore.login(userInfo)
-    console.log('111 :', 111)
+    router.push({ name: 'user' })
   } catch (error) {
     console.log('error: ', error)
   } finally {
