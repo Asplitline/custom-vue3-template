@@ -36,18 +36,6 @@
                       <div class="arco-upload-list-picture-mask">
                         <IconEdit />
                       </div>
-                      <!-- <a-progress
-                        v-if="file.status === 'uploading' && file.percent < 100"
-                        :percent="file.percent"
-                        type="circle"
-                        size="mini"
-                        :style="{
-                          position: 'absolute',
-                          left: '50%',
-                          top: '50%',
-                          transform: 'translateX(-50%) translateY(-50%)',
-                        }"
-                      /> -->
                     </div>
                     <div v-else class="arco-upload-picture-card">
                       <div class="arco-upload-picture-card-text">
@@ -69,7 +57,6 @@
             </a-form-item>
             <a-form-item field="lx" label="分类">
               <a-select v-model="formModel.lx" placeholder="请选择分类">
-                <!-- :style="{ width: '320px' }" -->
                 <a-optgroup
                   v-for="option in options"
                   :key="option.id"

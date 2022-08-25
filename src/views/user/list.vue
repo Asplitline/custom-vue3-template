@@ -168,18 +168,6 @@
                     <div class="arco-upload-list-picture-mask">
                       <IconEdit />
                     </div>
-                    <a-progress
-                      v-if="file.status === 'uploading' && file.percent < 100"
-                      :percent="file.percent"
-                      type="circle"
-                      size="mini"
-                      :style="{
-                        position: 'absolute',
-                        left: '50%',
-                        top: '50%',
-                        transform: 'translateX(-50%) translateY(-50%)',
-                      }"
-                    />
                   </div>
                   <div v-else class="arco-upload-picture-card">
                     <div class="arco-upload-picture-card-text">
@@ -307,6 +295,3 @@ onMounted(() => {
   padding-left: 60px;
 }
 </style>
-
-用户名 姓名 密码 性别 身份 状态 邮箱 QQ 手机号码 个人简介 头像 username name
-password gender level state email qq phone description url
