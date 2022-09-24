@@ -30,11 +30,15 @@
           </a-table-column>
           <a-table-column title="标题" data-index="name" />
           <a-table-column title="描述" data-index="description" :width="400" />
-          <a-table-column title="创建时间" data-index="ctime">
-            <template #cell="{ record }"> {{ format(record.ctime) }} </template>
+          <a-table-column title="创建时间" data-index="createTime">
+            <template #cell="{ record }">
+              {{ format(record.createTime) }}
+            </template>
           </a-table-column>
-          <a-table-column title="更新时间" data-index="utime">
-            <template #cell="{ record }"> {{ format(record.utime) }} </template>
+          <a-table-column title="更新时间" data-index="updateTime">
+            <template #cell="{ record }">
+              {{ format(record.updateTime) }}
+            </template>
           </a-table-column>
 
           <a-table-column title="操作" data-index="operations">
@@ -42,8 +46,8 @@
               <a-button type="text" size="small" @click="showModal(record)">
                 修改
               </a-button>
+              <!-- v-if="record.pid" -->
               <a-popconfirm
-                v-if="record.pid"
                 :content="`是否确定要删除: ${record.name}`"
                 @ok="deleteData(record.id)"
               >
@@ -224,7 +228,8 @@ const reload = () => {
 
 const parents = computed(() => {
   if (renderData.value.length === 0) return []
-  const pids = renderData.value.map((i) => i.pid).filter((i) => i)
+  const pids = renderData.value.filter((i) => !i.pid).map((i) => i.id)
+
   const endPids = Array.from(new Set(pids))
   return endPids.map((i) => {
     const parent = renderData.value.find((j) => j.id === i)
@@ -233,6 +238,7 @@ const parents = computed(() => {
 })
 
 const filterTableData = computed(() => {
+  console.log(parents.value)
   if (parents.value.length === 0) return []
   const result = parents.value.map((i) => {
     const children = renderData.value.filter((j) => j.pid === i.id)
@@ -244,11 +250,16 @@ const filterTableData = computed(() => {
   return result
 })
 
+console.log(filterTableData)
+
 const submitForm = () => {
   formRef.value.validate(async (err) => {
     if (err) return
     if (isEdit.value) {
-      const { success } = await updateCategory(formModel.value)
+      const { success } = await updateCategory({
+        ...formModel.value,
+        updateTime: Date.now(),
+      })
       handleCode(success, ['修改分类成功', '修改分类失败'], () => reload())
     } else {
       const { success } = await addCategory(formModel.value)

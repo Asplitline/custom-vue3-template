@@ -5,7 +5,8 @@ import { Message } from '@arco-design/web-vue'
 export default {
   install(app: App) {
     app.provide('formateDate', (v): string => {
-      return dayjs(v).format('YYYY-MM-DD HH:mm:ss')
+      const value = dayjs(v).format('YYYY-MM-DD HH:mm:ss')
+      return value === 'Invalid Date' ? '暂无' : value
     })
 
     app.provide(
