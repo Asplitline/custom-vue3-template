@@ -1,5 +1,5 @@
 <template>
-  <div> advice</div>
+  <div> order</div>
 </template>
 
 <script lang="ts" setup></script>

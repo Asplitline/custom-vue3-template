@@ -58,7 +58,7 @@ export default function useTable(
       const { success } = await deleteApi?.({ id })
       if (success) {
         Message.success('删除成功')
-        fetchData()
+        await fetchData()
         callback?.()
       } else {
         Message.error('删除失败')
@@ -78,9 +78,10 @@ export default function useTable(
     fetchData()
   }
 
-  const onPageChange = (number: number) => {
+  const onPageChange = async (number: number, callback?: () => void) => {
     searchModel.value.page = number
-    fetchData()
+    await fetchData()
+    callback?.()
   }
 
   return {

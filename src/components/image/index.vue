@@ -16,7 +16,7 @@ const props = defineProps({
 const endSrc = computed(() => {
   return props.local
     ? props.src
-    : (import.meta.env.VITE_API_URL as string) + props.src
+    : (import.meta.env.VITE_API_IMG_URL as string) + props.src
 })
 </script>
 

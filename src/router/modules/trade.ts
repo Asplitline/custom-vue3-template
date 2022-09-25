@@ -9,9 +9,9 @@ export default {
   },
   children: [
     {
-      path: 'advice',
-      name: 'trade-advice',
-      component: () => import('@/views/trade/advice.vue'),
+      path: 'order',
+      name: 'trade-order',
+      component: () => import('@/views/trade/order.vue'),
       meta: {
         locale: '订单管理',
         requiresAuth: true,
@@ -19,9 +19,9 @@ export default {
       },
     },
     {
-      path: 'order',
-      name: 'trade-order',
-      component: () => import('@/views/trade/order.vue'),
+      path: 'advice',
+      name: 'trade-advice',
+      component: () => import('@/views/trade/advice.vue'),
       meta: {
         locale: '投诉建议',
         requiresAuth: true,

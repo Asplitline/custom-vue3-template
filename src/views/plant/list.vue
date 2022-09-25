@@ -20,7 +20,7 @@
         :pagination="pagination"
         :data="newRenderData"
         :bordered="false"
-        @page-change="onPageChange"
+        @page-change="(v) => onPageChange(v, fetchCategory)"
       >
         <template #columns>
           <a-table-column title="植物插图" data-index="url">
@@ -46,14 +46,17 @@
               <a-tag v-else-if="record.status == 1" color="blue"> 已上架</a-tag>
               <a-tag v-else color="red"> 已售罄</a-tag>
             </template>
-            <a-tag> </a-tag>
           </a-table-column>
 
-          <a-table-column title="创建时间" data-index="ctime">
-            <template #cell="{ record }"> {{ format(record.ctime) }} </template>
+          <a-table-column title="创建时间" data-index="createTime">
+            <template #cell="{ record }">
+              {{ format(record.createTime) }}
+            </template>
           </a-table-column>
-          <a-table-column title="更新时间" data-index="utime">
-            <template #cell="{ record }"> {{ format(record.utime) }} </template>
+          <a-table-column title="更新时间" data-index="updateTime">
+            <template #cell="{ record }">
+              {{ format(record.updateTime) }}
+            </template>
           </a-table-column>
 
           <a-table-column title="操作" data-index="operations">
@@ -116,7 +119,16 @@
             />
           </a-form-item>
           <a-form-item field="address" label="种植地点">
-            <a-input v-model="formModel.address" placeholder="请输入种植地点" />
+            <a-select
+              v-model="formModel.address"
+              placeholder="请选择种植地点"
+              multiple
+            >
+              <a-option>窗台</a-option>
+              <a-option>楼顶</a-option>
+              <a-option>庭院</a-option>
+              <a-option>花园</a-option>
+            </a-select>
           </a-form-item>
           <a-form-item field="num" label="当前库存">
             <a-input-number
@@ -247,6 +259,7 @@ const fetchCategory = async () => {
       category,
     }
   })
+  console.log('newRenderData.value :', newRenderData.value)
 }
 
 const showModal = (row?: any) => {
@@ -254,7 +267,7 @@ const showModal = (row?: any) => {
     if (row) {
       isEdit.value = true
       file.value = { url: row.url }
-      formModel.value = deepClone(row)
+      formModel.value = deepClone({ ...row, address: row.address.split('-') })
     } else {
       isEdit.value = false
     }
@@ -268,18 +281,25 @@ const cancelModal = () =>
 
 const reload = () => {
   cancelModal()
-  fetchData()
-  fetchCategory()
+  fetchData(fetchCategory)
 }
 
 const submitForm = () => {
   formRef.value.validate(async (err) => {
     if (err) return
     if (isEdit.value) {
-      const { success } = await updatePlant(formModel.value)
+      const { success } = await updatePlant({
+        ...formModel.value,
+        address: formModel.value.address.join('-'),
+        updateTime: Date.now(),
+      })
       handleCode(success, ['修改植物成功', '修改植物失败'], () => reload())
     } else {
-      const { success } = await addPlant({ ...formModel.value, status: 0 })
+      const { success } = await addPlant({
+        ...formModel.value,
+        address: formModel.value.address.join('-'),
+        status: 0,
+      })
       handleCode(success, ['添加植物成功', '添加植物失败'], () => reload())
     }
   })
