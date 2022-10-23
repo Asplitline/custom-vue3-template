@@ -40,13 +40,13 @@
           <a-table-column title="植物价格" data-index="price" />
           <a-table-column title="种植地点" data-index="address" />
           <a-table-column title="当前库存" data-index="num" />
-          <a-table-column title="售卖状态" data-index="status">
+          <!-- <a-table-column title="售卖状态" data-index="status">
             <template #cell="{ record }">
               <a-tag v-if="record.status == 0" color="gray">未上架 </a-tag>
               <a-tag v-else-if="record.status == 1" color="blue"> 已上架</a-tag>
               <a-tag v-else color="red"> 已售罄</a-tag>
             </template>
-          </a-table-column>
+          </a-table-column> -->
 
           <a-table-column title="创建时间" data-index="createTime">
             <template #cell="{ record }">
@@ -84,7 +84,7 @@
       @before-ok="confirmModal"
       @before-close="clearModal"
     >
-      <template #title>{{ isEdit ? '修改用户' : '新增用户' }} </template>
+      <template #title>{{ isEdit ? '修改植物' : '新增植物' }} </template>
       <div>
         <a-form
           ref="formRef"
@@ -270,6 +270,7 @@ const showModal = (row?: any) => {
       formModel.value = deepClone({ ...row, address: row.address.split('-') })
     } else {
       isEdit.value = false
+      formModel.value = {}
     }
   })
 }

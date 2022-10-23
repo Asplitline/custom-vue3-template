@@ -43,7 +43,7 @@
             <img alt="avatar" :src="avatar" />
           </a-avatar>
           <template #content>
-            <a-doption>
+            <!-- <a-doption>
               <a-space @click="switchGit">
                 <icon-github />
                 <span> 开源地址 </span>
@@ -72,13 +72,11 @@
                   {{ $t('messageBox.userSettings') }}
                 </span>
               </a-space>
-            </a-doption>
+            </a-doption> -->
             <a-doption>
               <a-space @click="handleLogout">
                 <icon-export />
-                <span>
-                  {{ $t('messageBox.logout') }}
-                </span>
+                <span> 退出登录 </span>
               </a-space>
             </a-doption>
           </template>
@@ -103,7 +101,7 @@ const { logout } = useUser()
 const { changeLocale } = useLocale()
 const locales = [...LOCALE_OPTIONS]
 const avatar = computed(() => {
-  return userStore.avatar
+  return `${import.meta.env.VITE_API_IMG_URL}/${userStore.info.url}`
 })
 const theme = computed(() => {
   return appStore.theme
