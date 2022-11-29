@@ -24,11 +24,7 @@
         @page-change="onPageChange"
       >
         <template #expand-row="{ record }">
-          <a-descriptions
-            class="desc"
-            :data="handleRow(record)"
-            :column="1"
-          ></a-descriptions>
+          <a-descriptions class="desc" :data="handleRow(record)" :column="1"></a-descriptions>
         </template>
         <template #columns>
           <a-table-column title="头像" data-index="url">
@@ -40,8 +36,8 @@
           <a-table-column title="昵称" data-index="name" />
           <a-table-column title="身份" data-index="level">
             <template #cell="{ record }">
-              <a-tag v-if="record.level == 1" color="red">管理员 </a-tag>
-              <a-tag v-else color="blue">小程序用户</a-tag>
+              <a-tag v-if="record.level == 1" color="red">老师 </a-tag>
+              <a-tag v-else color="blue">学生</a-tag>
             </template>
           </a-table-column>
           <!-- <a-table-column title="状态" data-index="state">
@@ -59,16 +55,9 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="showModal(record)">
-                修改
-              </a-button>
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.name}`"
-                @ok="deleteData(record.id)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-button type="text" size="small" @click="showModal(record)"> 修改 </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.name}`" @ok="deleteData(record.id)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -84,18 +73,9 @@
     >
       <template #title>{{ isEdit ? '修改用户' : '新增用户' }} </template>
       <div>
-        <a-form
-          ref="formRef"
-          :model="formModel"
-          :rules="formRules"
-          autocomplete="off"
-        >
+        <a-form ref="formRef" :model="formModel" :rules="formRules" autocomplete="off">
           <a-form-item field="username" label="用户名">
-            <a-input
-              v-model="formModel.username"
-              placeholder="请输入用户名"
-              :readonly="isEdit"
-            />
+            <a-input v-model="formModel.username" placeholder="请输入用户名" :readonly="isEdit" />
           </a-form-item>
           <a-form-item field="name" label="姓名">
             <a-input v-model="formModel.name" placeholder="请输入姓名" />
@@ -116,8 +96,8 @@
           </a-form-item>
           <a-form-item field="level" label="身份">
             <a-radio-group v-model="formModel.level" :default-value="false">
-              <a-radio value="0">小程序用户</a-radio>
-              <a-radio value="1">管理员</a-radio>
+              <a-radio value="0">学生</a-radio>
+              <a-radio value="1">老师</a-radio>
             </a-radio-group>
           </a-form-item>
           <!-- <a-form-item field="state" label="状态">
@@ -136,11 +116,7 @@
             <a-input v-model="formModel.phone" placeholder="请输入手机号码" />
           </a-form-item>
           <a-form-item field="description" label="个人简介">
-            <a-textarea
-              v-model="formModel.description"
-              placeholder="请输入个人简介"
-              allow-clear
-            />
+            <a-textarea v-model="formModel.description" placeholder="请输入个人简介" allow-clear />
           </a-form-item>
 
           <a-form-item field="url" label="头像">
@@ -154,15 +130,10 @@
               <template #upload-button>
                 <div
                   :class="`arco-upload-list-item${
-                    file && file.status === 'error'
-                      ? ' arco-upload-list-item-error'
-                      : ''
+                    file && file.status === 'error' ? ' arco-upload-list-item-error' : ''
                   }`"
                 >
-                  <div
-                    v-if="file && file.url"
-                    class="arco-upload-list-picture custom-upload-avatar"
-                  >
+                  <div v-if="file && file.url" class="arco-upload-list-picture custom-upload-avatar">
                     <cs-image v-if="!file.uid" :src="file.url" />
                     <img v-else :src="file.url" />
                     <div class="arco-upload-list-picture-mask">
@@ -172,9 +143,7 @@
                   <div v-else class="arco-upload-picture-card">
                     <div class="arco-upload-picture-card-text">
                       <IconPlus />
-                      <div style="margin-top: 10px; font-weight: 600"
-                        >Upload</div
-                      >
+                      <div style="margin-top: 10px; font-weight: 600">Upload</div>
                     </div>
                   </div>
                 </div>
@@ -193,13 +162,12 @@
 </template>
 
 <script lang="ts" setup>
-import { deleteUserById, getUserList, updateUser, addUser } from '@/api/user'
+import { addUser, deleteUserById, getUserList, updateUser } from '@/api/user'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
-import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive } from 'vue'
 
 const format = inject('formateDate')
@@ -209,21 +177,11 @@ const expandable = reactive({
   width: 80,
 })
 const { formRef, formModel, resetForm } = useForm()
-const {
-  isEdit,
-  modalVisible,
-  showModal: _showModal,
-  cancelModal: _cancelModal,
-  clearModal: _clearModal,
-} = useModal()
-const { customRequest, file, onChange, onProgress } = useUpload(
-  formModel,
-  'url'
-)
+const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal } = useModal(formModel)
+const { customRequest, file, onChange, onProgress } = useUpload(formModel, 'url')
 
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getUserList, deleteUserById)
-const handleRow = (row) => {
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(getUserList, deleteUserById)
+const handleRow = (row: any) => {
   const res = [
     { label: '账号', value: row.username },
     { label: '昵称', value: row.name },
@@ -235,6 +193,7 @@ const handleRow = (row) => {
   ]
   return res
 }
+
 const formRules = reactive({
   username: [{ required: true, message: '请输入账号' }],
   name: [{ required: true, message: '请输入用户昵称' }],
@@ -245,25 +204,15 @@ const formRules = reactive({
 })
 
 const showModal = (row?: any) => {
-  _showModal(formModel, () => {
-    if (row) {
-      isEdit.value = true
-      file.value = { url: row.url }
-      formModel.value = deepClone(row)
-    } else {
-      isEdit.value = false
-    }
-  })
+  _showModal(row)
+  if (row?.url) {
+    file.value = { url: row.url }
+  }
 }
-const cancelModal = () =>
-  _cancelModal(() => {
-    file.value = null
-  })
-
-const clearModal = () => {
-  console.log('formModel.value : ', formModel.value)
-  formModel.value = {}
-  _cancelModal(resetForm)
+const cancelModal = () => {
+  _cancelModal()
+  resetForm()
+  file.value = null
 }
 
 const reload = () => {
@@ -272,7 +221,7 @@ const reload = () => {
 }
 
 const submitForm = () => {
-  formRef.value.validate(async (err) => {
+  formRef.value.validate(async (err: any) => {
     if (err) return
     if (isEdit.value) {
       const { success } = await updateUser(formModel.value)

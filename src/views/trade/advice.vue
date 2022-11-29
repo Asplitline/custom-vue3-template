@@ -34,21 +34,11 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button
-                type="text"
-                size="small"
-                :disabled="record.state == 1"
-                @click="showModal(record)"
-              >
+              <a-button type="text" size="small" :disabled="record.state == 1" @click="showModal(record)">
                 处理
               </a-button>
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.title}`"
-                @ok="deleteData(record.id)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.title}`" @ok="deleteData(record.id)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -56,19 +46,10 @@
       </a-table>
     </a-card>
 
-    <a-modal
-      v-model:visible="modalVisible"
-      @before-ok="confirmModal"
-      @before-close="clearModal"
-    >
+    <a-modal v-model:visible="modalVisible" @before-ok="confirmModal" @before-close="clearModal">
       <template #title>处理投诉 </template>
       <div>
-        <a-form
-          ref="formRef"
-          :model="formModel"
-          :rules="formRules"
-          autocomplete="off"
-        >
+        <a-form ref="formRef" :model="formModel" :rules="formRules" autocomplete="off">
           <a-form-item field="title" label="标题">
             <a-input v-model="formModel.title" readonly />
           </a-form-item>
@@ -98,18 +79,14 @@ import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
-const {
-  isEdit,
-  modalVisible,
-  showModal: _showModal,
-  cancelModal: _cancelModal,
-  clearModal: _clearModal,
-} = useModal()
+const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal: _clearModal } = useModal()
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
 
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getAdviceList, deleteAdviceById)
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(
+  getAdviceList,
+  deleteAdviceById
+)
 
 const formRules = reactive({
   name: [{ required: true, message: '请输入植物名称' }],

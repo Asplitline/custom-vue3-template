@@ -31,9 +31,7 @@
           <a-table-column title="标题" data-index="title" />
           <a-table-column title="分类" data-index="lx">
             <template #cell="{ record }">
-              <a-tag v-if="record.category?.name" color="blue">{{
-                record.category.name
-              }}</a-tag>
+              <a-tag v-if="record.category?.name" color="blue">{{ record.category.name }}</a-tag>
               <a-tag v-else color="gray"> 未知分类 </a-tag>
             </template>
           </a-table-column>
@@ -46,16 +44,9 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="skipDetail(record)">
-                修改
-              </a-button>
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.title}`"
-                @ok="deleteData(record.id, fetchCategory)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-button type="text" size="small" @click="skipDetail(record)"> 修改 </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.title}`" @ok="deleteData(record.id, fetchCategory)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -74,8 +65,10 @@ import { inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCacheStore } from '@/store'
 
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getContentList, deleteContentById)
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(
+  getContentList,
+  deleteContentById
+)
 
 const router = useRouter()
 const cacheStore = useCacheStore()

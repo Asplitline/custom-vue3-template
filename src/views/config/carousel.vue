@@ -46,16 +46,9 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="showModal(record)">
-                修改
-              </a-button>
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.title}`"
-                @ok="deleteData(record.id)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-button type="text" size="small" @click="showModal(record)"> 修改 </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.title}`" @ok="deleteData(record.id)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -63,11 +56,7 @@
       </a-table>
     </a-card>
 
-    <a-modal
-      v-model:visible="modalVisible"
-      @before-ok="confirmModal"
-      @before-close="clearModal"
-    >
+    <a-modal v-model:visible="modalVisible" @before-ok="confirmModal" @before-close="clearModal">
       <template #title>{{ isEdit ? '修改轮播图' : '新增轮播图' }} </template>
       <div>
         <a-form ref="formRef" :model="formModel" :rules="formRules">
@@ -75,10 +64,7 @@
             <a-input v-model="formModel.title" placeholder="请输入轮播图标题" />
           </a-form-item>
           <a-form-item field="description" label="描述">
-            <a-input
-              v-model="formModel.description"
-              placeholder="请输入轮播图描述"
-            />
+            <a-input v-model="formModel.description" placeholder="请输入轮播图描述" />
           </a-form-item>
           <a-form-item field="img" label="轮播图">
             <a-upload
@@ -91,15 +77,10 @@
               <template #upload-button>
                 <div
                   :class="`arco-upload-list-item${
-                    file && file.status === 'error'
-                      ? ' arco-upload-list-item-error'
-                      : ''
+                    file && file.status === 'error' ? ' arco-upload-list-item-error' : ''
                   }`"
                 >
-                  <div
-                    v-if="file && file.url"
-                    class="arco-upload-list-picture custom-upload-avatar"
-                  >
+                  <div v-if="file && file.url" class="arco-upload-list-picture custom-upload-avatar">
                     <cs-image v-if="!file.uid" :src="file.url" />
                     <img v-else :src="file.url" />
                     <div class="arco-upload-list-picture-mask">
@@ -121,9 +102,7 @@
                   <div v-else class="arco-upload-picture-card">
                     <div class="arco-upload-picture-card-text">
                       <IconPlus />
-                      <div style="margin-top: 10px; font-weight: 600"
-                        >Upload</div
-                      >
+                      <div style="margin-top: 10px; font-weight: 600">Upload</div>
                     </div>
                   </div>
                 </div>
@@ -142,12 +121,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  getCarouselList,
-  deleteCarouselById,
-  updateCarousel,
-  addCarousel,
-} from '@/api/carousel'
+import { getCarouselList, deleteCarouselById, updateCarousel, addCarousel } from '@/api/carousel'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
@@ -157,21 +131,14 @@ import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive, ref } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
-const {
-  isEdit,
-  modalVisible,
-  showModal: _showModal,
-  cancelModal: _cancelModal,
-  clearModal: _clearModal,
-} = useModal()
-const { customRequest, file, onChange, onProgress } = useUpload(
-  formModel,
-  'url'
-)
+const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal: _clearModal } = useModal()
+const { customRequest, file, onChange, onProgress } = useUpload(formModel, 'url')
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getCarouselList, deleteCarouselById)
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(
+  getCarouselList,
+  deleteCarouselById
+)
 
 const formRules = reactive({
   title: [{ required: true, message: '请输入轮播图标题' }],

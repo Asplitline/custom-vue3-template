@@ -10,25 +10,16 @@
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
         >
-          智慧园林后台系统
+          党员发展流程后台系统
         </a-typography-title>
       </a-space> -->
     </div>
     <ul class="right-side">
       <li>
         <a-tooltip
-          :content="
-            theme === 'light'
-              ? $t('settings.navbar.theme.toDark')
-              : $t('settings.navbar.theme.toLight')
-          "
+          :content="theme === 'light' ? $t('settings.navbar.theme.toDark') : $t('settings.navbar.theme.toLight')"
         >
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="toggleTheme"
-          >
+          <a-button class="nav-btn" type="outline" :shape="'circle'" @click="toggleTheme">
             <template #icon>
               <icon-moon-fill v-if="theme === 'dark'" />
               <icon-sun-fill v-else />

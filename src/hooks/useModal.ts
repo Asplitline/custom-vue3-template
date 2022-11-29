@@ -1,18 +1,15 @@
 import { deepClone } from '@/utils/tools'
 import { ref } from 'vue'
 
-export default function useModal() {
+export default function useModal(formModel?: any) {
   const modalVisible = ref(false)
   const isEdit = ref(false)
 
-  const showModal = (formModel, row) => {
+  const showModal = (row) => {
     modalVisible.value = true
-    if (typeof row === 'function') {
-      row()
-    } else if (row) {
+    if (row) {
       isEdit.value = true
       formModel.value = deepClone(row)
-      console.log(formModel.value)
     } else {
       isEdit.value = false
     }
@@ -26,7 +23,7 @@ export default function useModal() {
 
   const clearModal = (clearFunc?: () => void) => {
     cancelModal()
-    clearFunc?.()
+    formModel.value = {}
   }
 
   return { modalVisible, isEdit, showModal, cancelModal, clearModal }

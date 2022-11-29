@@ -44,9 +44,7 @@ export default defineComponent({
         type: 'number',
       }, */
     ]
-    const othersOpts = [
-      { name: 'settings.colorWeek', key: 'colorWeek', defaultVal: false },
-    ]
+    const othersOpts = [{ name: 'settings.colorWeek', key: 'colorWeek', defaultVal: false }]
 
     const cancel = () => {
       appStore.updateSettings({ globalSettings: false })

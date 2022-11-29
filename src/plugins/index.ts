@@ -9,24 +9,16 @@ export default {
       return value === 'Invalid Date' ? '暂无' : value
     })
 
-    app.provide(
-      'handleCode',
-      (
-        flag: boolean,
-        message: string[] = [],
-        success?: () => void,
-        fail?: () => void
-      ) => {
-        const [successText, errorText] = message
-        if (flag) {
-          if (successText) Message.success(successText)
-          success?.()
-        } else {
-          if (errorText) Message.error(errorText)
-          fail?.()
-        }
+    app.provide('handleCode', (flag: boolean, message: string[] = [], success?: () => void, fail?: () => void) => {
+      const [successText, errorText] = message
+      if (flag) {
+        if (successText) Message.success(successText)
+        success?.()
+      } else {
+        if (errorText) Message.error(errorText)
+        fail?.()
       }
-    )
+    })
     // app.provide
   },
 }

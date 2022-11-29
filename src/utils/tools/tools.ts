@@ -25,12 +25,7 @@ export function isEmpty(value: any) {
   return !value
 }
 
-export function handleCode(
-  flag: boolean,
-  message: string[] = [],
-  success?: () => void,
-  fail?: () => void
-) {
+export function handleCode(flag: boolean, message: string[] = [], success?: () => void, fail?: () => void) {
   const [successText, errorText] = message
   if (flag) {
     if (successText) Message.success(successText)

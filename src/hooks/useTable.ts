@@ -26,8 +26,7 @@ export default function useTable(
   deleteApi?: (params: QueryDeleteParams) => any,
   options: TableOptions = {}
 ) {
-  const { searchDefault = searchModelDef, paginationDefault = paginationDef } =
-    options
+  const { searchDefault = searchModelDef, paginationDefault = paginationDef } = options
 
   const searchModel = ref<QueryParams>(searchDefault)
   const { loading, setLoading } = useLoading()
@@ -39,9 +38,7 @@ export default function useTable(
   const fetchData = async (callback?: () => void) => {
     try {
       setLoading(true)
-      const { list, total, pageSize, pageNum } = await fetchApi?.(
-        searchModel.value
-      )
+      const { list, total, pageSize, pageNum } = await fetchApi?.(searchModel.value)
       Object.assign(pagination.value, { total, current: pageNum, pageSize })
       renderData.value = list
       callback?.()

@@ -27,9 +27,7 @@ const route = useRoute()
 const defaultVal = reactive<string[]>([])
 
 const initData = () => {
-  const routeRouter = router.options.routes.find(
-    (i) => i.name === 'root'
-  )?.children
+  const routeRouter = router.options.routes.find((i) => i.name === 'root')?.children
   routeRouter?.forEach((e) => {
     if (e.children) {
       const currentRoute = e.children.find((i) => {

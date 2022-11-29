@@ -1,36 +1,29 @@
 <template>
-  <a-config-provider :locale="locale">
+  <a-config-provider>
     <router-view></router-view>
     <global-setting />
   </a-config-provider>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import enUS from '@arco-design/web-vue/es/locale/lang/en-us'
-import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn'
+<script lang="ts" setup>
 import GlobalSetting from '@/components/global-setting/index.vue'
-import useLocale from '@/hooks/locale'
+import { Message } from '@arco-design/web-vue'
+import dayjs from 'dayjs'
+import { provide } from 'vue'
 
-export default defineComponent({
-  components: {
-    GlobalSetting,
-  },
-  setup() {
-    const { currentLocale } = useLocale()
-    const locale = computed(() => {
-      switch (currentLocale.value) {
-        case 'zh-CN':
-          return zhCN
-        case 'en-US':
-          return enUS
-        default:
-          return enUS
-      }
-    })
-    return {
-      locale,
-    }
-  },
+provide('handleCode', (flag: boolean, message: string[] = [], success?: () => void, fail?: () => void) => {
+  const [successText, errorText] = message
+  if (flag) {
+    if (successText) Message.success(successText)
+    success?.()
+  } else {
+    if (errorText) Message.error(errorText)
+    fail?.()
+  }
+})
+
+provide('formateDate', (v): string => {
+  const value = dayjs(v).format('YYYY-MM-DD HH:mm:ss')
+  return value === 'Invalid Date' ? '暂无' : value
 })
 </script>

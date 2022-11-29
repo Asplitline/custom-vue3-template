@@ -1,13 +1,7 @@
 <script lang="tsx">
 import { defineComponent, ref, watch, h, compile, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  useRouter,
-  useRoute,
-  RouteRecordRaw,
-  RouteRecordNormalized,
-  RouteMeta,
-} from 'vue-router'
+import { useRouter, useRoute, RouteRecordRaw, RouteRecordNormalized, RouteMeta } from 'vue-router'
 import { useAppStore } from '@/store'
 import usePermission from '@/hooks/permission'
 import { jsxClosingElement } from '@babel/types'
@@ -23,9 +17,7 @@ export default defineComponent({
     const route = useRoute()
     const collapsed = ref(false)
     const appRoute = computed(() => {
-      return router
-        .getRoutes()
-        .find((el) => el.name === 'root') as RouteRecordNormalized
+      return router.getRoutes().find((el) => el.name === 'root') as RouteRecordNormalized
     })
     const menuTree = computed(() => {
       const copyRouter = JSON.parse(JSON.stringify(appRoute.value.children))
@@ -44,9 +36,7 @@ export default defineComponent({
           }
 
           // route filter hideInMenu true
-          element.children = element.children.filter(
-            (x) => x.meta?.hideInMenu !== true
-          )
+          element.children = element.children.filter((x) => x.meta?.hideInMenu !== true)
 
           // Associated child node
           const subItem = travel(element.children, layer)
@@ -135,9 +125,7 @@ export default defineComponent({
         return nodes
       }
 
-      const endMenuTree = menuTree.value.filter(
-        (i: any) => i.meta?.hideInMenu !== true
-      )
+      const endMenuTree = menuTree.value.filter((i: any) => i.meta?.hideInMenu !== true)
       return travel(endMenuTree)
     }
 

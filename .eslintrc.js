@@ -40,6 +40,7 @@ module.exports = {
       {
         endOfLine: 'auto',
         semi: false,
+        printWidth: 120,
       },
     ],
     // Vue: Recommended rules to be closed or modify

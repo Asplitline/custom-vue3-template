@@ -1,13 +1,7 @@
 <template>
   <div class="container">
     <Breadcrumb />
-    <a-form
-      ref="formRef"
-      :model="formModel"
-      :rules="formRules"
-      layout="vertical"
-      class="ups-form"
-    >
+    <a-form ref="formRef" :model="formModel" :rules="formRules" layout="vertical" class="ups-form">
       <a-row :gutter="60">
         <a-col :span="8">
           <a-card>
@@ -22,15 +16,10 @@
                 <template #upload-button>
                   <div
                     :class="`arco-upload-list-item${
-                      file && file.status === 'error'
-                        ? ' arco-upload-list-item-error'
-                        : ''
+                      file && file.status === 'error' ? ' arco-upload-list-item-error' : ''
                     }`"
                   >
-                    <div
-                      v-if="file && file.url"
-                      class="arco-upload-list-picture custom-upload-avatar"
-                    >
+                    <div v-if="file && file.url" class="arco-upload-list-picture custom-upload-avatar">
                       <cs-image v-if="!file.uid" :src="file.url" />
                       <img v-else :src="file.url" />
                       <div class="arco-upload-list-picture-mask">
@@ -40,9 +29,7 @@
                     <div v-else class="arco-upload-picture-card">
                       <div class="arco-upload-picture-card-text">
                         <IconPlus />
-                        <div style="margin-top: 10px; font-weight: 600"
-                          >Upload</div
-                        >
+                        <div style="margin-top: 10px; font-weight: 600">Upload</div>
                       </div>
                     </div>
                   </div>
@@ -50,46 +37,25 @@
               </a-upload>
             </a-form-item>
             <a-form-item field="title" label="标题">
-              <a-input
-                v-model="formModel.title"
-                placeholder="请输入标题"
-              ></a-input>
+              <a-input v-model="formModel.title" placeholder="请输入标题"></a-input>
             </a-form-item>
             <a-form-item field="lx" label="分类">
               <a-select v-model="formModel.lx" placeholder="请选择分类">
-                <a-optgroup
-                  v-for="option in options"
-                  :key="option.id"
-                  :label="option.name"
-                >
-                  <a-option
-                    v-for="opt in option.children"
-                    :key="opt.id"
-                    :value="opt.id"
-                    >{{ opt.name }}</a-option
-                  >
+                <a-optgroup v-for="option in options" :key="option.id" :label="option.name">
+                  <a-option v-for="opt in option.children" :key="opt.id" :value="opt.id">{{ opt.name }}</a-option>
                 </a-optgroup>
               </a-select>
             </a-form-item>
-            <a-alert
-              >图片仅支持 gif / png / jpg , 大小不超过 1MB (1024KB)</a-alert
-            >
+            <a-alert>图片仅支持 gif / png / jpg , 大小不超过 1MB (1024KB)</a-alert>
           </a-card></a-col
         >
         <a-col :span="16">
           <a-card>
             <a-form-item field="title" label="内容" :content-flex="false">
-              <QuillEditor
-                ref="editor"
-                v-model:content="formModel.content"
-                theme="snow"
-                class="quill-editor"
-              />
+              <QuillEditor ref="editor" v-model:content="formModel.content" theme="snow" class="quill-editor" />
             </a-form-item>
             <a-button @click="back">返回</a-button>
-            <a-button type="primary" class="submit-btn" @click="submitForm"
-              >提交</a-button
-            >
+            <a-button type="primary" class="submit-btn" @click="submitForm">提交</a-button>
           </a-card>
         </a-col>
       </a-row>
@@ -114,10 +80,7 @@ const cacheStore = useCacheStore()
 const handleCode = inject('handleCode')
 const editor = ref()
 const options = ref()
-const { customRequest, file, onChange, onProgress } = useUpload(
-  formModel,
-  'url'
-)
+const { customRequest, file, onChange, onProgress } = useUpload(formModel, 'url')
 
 const route = useRoute()
 const router = useRouter()

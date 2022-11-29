@@ -20,9 +20,7 @@
           </a-table-column>
           <a-table-column title="订单状态" data-index="status">
             <template #cell="{ record }">
-              <a-tag :color="getCurrentStatus(record.status).color">
-                {{ getCurrentStatus(record.status).label }}</a-tag
-              >
+              <a-tag :color="getCurrentStatus(record.status).color"> {{ getCurrentStatus(record.status).label }}</a-tag>
             </template>
           </a-table-column>
 
@@ -39,16 +37,9 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="newShowModal(record)">
-                订单管理
-              </a-button>
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.goodsName}`"
-                @ok="deleteData(record.id)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-button type="text" size="small" @click="newShowModal(record)"> 订单管理 </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.goodsName}`" @ok="deleteData(record.id)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -56,11 +47,7 @@
       </a-table>
     </a-card>
 
-    <a-modal
-      v-model:visible="modalVisible"
-      @before-ok="confirmModal"
-      @before-close="clearModal"
-    >
+    <a-modal v-model:visible="modalVisible" @before-ok="confirmModal" @before-close="clearModal">
       <template #title> 订单处理 </template>
       <div>
         <a-steps :current="currentStep" label-placement="vertical">
@@ -71,24 +58,16 @@
       >
       <template #footer>
         <a-button @click="cancelModal">取消</a-button>
-        <a-button
-          type="primary"
-          :disabled="currentStatus.disabled"
-          @click="submitForm"
-          >{{ currentStatus.submitText }}</a-button
-        >
+        <a-button type="primary" :disabled="currentStatus.disabled" @click="submitForm">{{
+          currentStatus.submitText
+        }}</a-button>
       </template>
     </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {
-  addPlantOrder,
-  deletePlantOrderById,
-  getPlantOrderList,
-  updatePlantOrder,
-} from '@/api/order'
+import { addPlantOrder, deletePlantOrderById, getPlantOrderList, updatePlantOrder } from '@/api/order'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
@@ -101,8 +80,10 @@ const { isEdit, modalVisible, showModal, cancelModal, clearModal } = useModal()
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
 const currentStep = ref(0)
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getPlantOrderList, deletePlantOrderById)
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(
+  getPlantOrderList,
+  deletePlantOrderById
+)
 const currentStatus = ref({})
 
 const options = ref([
@@ -169,9 +150,7 @@ const submitForm = async () => {
     ...formModel.value,
     status: currentStatus.value?.nextStatus,
   })
-  handleCode(success, [`${currentText}成功`, `${currentText}失败`], () =>
-    reload()
-  )
+  handleCode(success, [`${currentText}成功`, `${currentText}失败`], () => reload())
 }
 
 const confirmModal = () => submitForm()

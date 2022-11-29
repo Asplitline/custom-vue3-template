@@ -43,17 +43,10 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="showModal(record)">
-                修改
-              </a-button>
+              <a-button type="text" size="small" @click="showModal(record)"> 修改 </a-button>
               <!-- v-if="record.pid" -->
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.name}`"
-                @ok="deleteData(record.id)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.name}`" @ok="deleteData(record.id)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -61,11 +54,7 @@
       </a-table>
     </a-card>
 
-    <a-modal
-      v-model:visible="modalVisible"
-      @before-ok="confirmModal"
-      @before-close="clearModal"
-    >
+    <a-modal v-model:visible="modalVisible" @before-ok="confirmModal" @before-close="clearModal">
       <template #title>{{ isEdit ? '修改分类' : '新增分类' }} </template>
       <div>
         <a-form ref="formRef" :model="formModel" :rules="formRules">
@@ -76,22 +65,14 @@
               placeholder="请选择父级分类"
               :disabled="!formModel.pid && isEdit"
             >
-              <a-option
-                v-for="option in parents"
-                :key="option.id"
-                :value="option.id"
-                >{{ option.name }}</a-option
-              >
+              <a-option v-for="option in parents" :key="option.id" :value="option.id">{{ option.name }}</a-option>
             </a-select>
           </a-form-item>
           <a-form-item field="name" label="标题">
             <a-input v-model="formModel.name" placeholder="请输入分类标题" />
           </a-form-item>
           <a-form-item field="description" label="描述">
-            <a-input
-              v-model="formModel.description"
-              placeholder="请输入分类描述"
-            />
+            <a-input v-model="formModel.description" placeholder="请输入分类描述" />
           </a-form-item>
           <a-form-item field="icon" label="分类">
             <a-upload
@@ -104,15 +85,10 @@
               <template #upload-button>
                 <div
                   :class="`arco-upload-list-item${
-                    file && file.status === 'error'
-                      ? ' arco-upload-list-item-error'
-                      : ''
+                    file && file.status === 'error' ? ' arco-upload-list-item-error' : ''
                   }`"
                 >
-                  <div
-                    v-if="file && file.url"
-                    class="arco-upload-list-picture custom-upload-avatar"
-                  >
+                  <div v-if="file && file.url" class="arco-upload-list-picture custom-upload-avatar">
                     <cs-image v-if="!file.uid" :src="file.url" />
                     <img v-else :src="file.url" />
                     <div class="arco-upload-list-picture-mask">
@@ -134,9 +110,7 @@
                   <div v-else class="arco-upload-picture-card">
                     <div class="arco-upload-picture-card-text">
                       <IconPlus />
-                      <div style="margin-top: 10px; font-weight: 600"
-                        >Upload</div
-                      >
+                      <div style="margin-top: 10px; font-weight: 600">Upload</div>
                     </div>
                   </div>
                 </div>
@@ -155,12 +129,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  getCategoryList,
-  deleteCategoryById,
-  updateCategory,
-  addCategory,
-} from '@/api/category'
+import { getCategoryList, deleteCategoryById, updateCategory, addCategory } from '@/api/category'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
@@ -170,21 +139,14 @@ import { deepClone } from '@/utils/tools'
 import { computed, inject, onMounted, reactive, ref } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
-const {
-  isEdit,
-  modalVisible,
-  showModal: _showModal,
-  cancelModal: _cancelModal,
-  clearModal: _clearModal,
-} = useModal()
-const { customRequest, file, onChange, onProgress } = useUpload(
-  formModel,
-  'icon'
-)
+const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal: _clearModal } = useModal()
+const { customRequest, file, onChange, onProgress } = useUpload(formModel, 'icon')
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getCategoryList, deleteCategoryById, {
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(
+  getCategoryList,
+  deleteCategoryById,
+  {
     searchDefault: {
       page: 1,
       size: 9999,
@@ -195,7 +157,8 @@ const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
       current: 1,
       pageSize: 9999,
     },
-  })
+  }
+)
 
 const formRules = reactive({
   name: [{ required: true, message: '请输入分类标题' }],

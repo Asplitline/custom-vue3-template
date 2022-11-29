@@ -31,9 +31,7 @@
           <a-table-column title="植物名称" data-index="name" />
           <a-table-column title="植物分类" data-index="type">
             <template #cell="{ record }">
-              <a-tag v-if="record.category?.name" color="blue">{{
-                record.category.name
-              }}</a-tag>
+              <a-tag v-if="record.category?.name" color="blue">{{ record.category.name }}</a-tag>
               <a-tag v-else color="gray"> 未知分类 </a-tag>
             </template>
           </a-table-column>
@@ -61,16 +59,9 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="showModal(record)">
-                修改
-              </a-button>
-              <a-popconfirm
-                :content="`是否确定要删除: ${record.name}`"
-                @ok="deleteData(record.id, fetchCategory)"
-              >
-                <a-button type="text" status="danger" size="small">
-                  删除
-                </a-button>
+              <a-button type="text" size="small" @click="showModal(record)"> 修改 </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.name}`" @ok="deleteData(record.id, fetchCategory)">
+                <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
           </a-table-column>
@@ -86,44 +77,22 @@
     >
       <template #title>{{ isEdit ? '修改植物' : '新增植物' }} </template>
       <div>
-        <a-form
-          ref="formRef"
-          :model="formModel"
-          :rules="formRules"
-          autocomplete="off"
-        >
+        <a-form ref="formRef" :model="formModel" :rules="formRules" autocomplete="off">
           <a-form-item field="name" label="植物名称">
             <a-input v-model="formModel.name" placeholder="请输入植物名称" />
           </a-form-item>
           <a-form-item field="type" label="植物分类">
             <a-select v-model="formModel.type" placeholder="请选择植物分类">
-              <a-optgroup
-                v-for="option in options"
-                :key="option.id"
-                :label="option.name"
-              >
-                <a-option
-                  v-for="opt in option.children"
-                  :key="opt.id"
-                  :value="opt.id"
-                  >{{ opt.name }}</a-option
-                >
+              <a-optgroup v-for="option in options" :key="option.id" :label="option.name">
+                <a-option v-for="opt in option.children" :key="opt.id" :value="opt.id">{{ opt.name }}</a-option>
               </a-optgroup>
             </a-select>
           </a-form-item>
           <a-form-item field="price" label="植物价格">
-            <a-input-number
-              v-model="formModel.price"
-              placeholder="请输入植物价格"
-              :min="1"
-            />
+            <a-input-number v-model="formModel.price" placeholder="请输入植物价格" :min="1" />
           </a-form-item>
           <a-form-item field="address" label="种植地点">
-            <a-select
-              v-model="formModel.address"
-              placeholder="请选择种植地点"
-              multiple
-            >
+            <a-select v-model="formModel.address" placeholder="请选择种植地点" multiple>
               <a-option>窗台</a-option>
               <a-option>楼顶</a-option>
               <a-option>庭院</a-option>
@@ -131,11 +100,7 @@
             </a-select>
           </a-form-item>
           <a-form-item field="num" label="当前库存">
-            <a-input-number
-              v-model="formModel.num"
-              placeholder="请输入当前库存"
-              :min="1"
-            />
+            <a-input-number v-model="formModel.num" placeholder="请输入当前库存" :min="1" />
           </a-form-item>
 
           <a-form-item v-if="isEdit" field="status" label="售卖状态">
@@ -157,15 +122,10 @@
               <template #upload-button>
                 <div
                   :class="`arco-upload-list-item${
-                    file && file.status === 'error'
-                      ? ' arco-upload-list-item-error'
-                      : ''
+                    file && file.status === 'error' ? ' arco-upload-list-item-error' : ''
                   }`"
                 >
-                  <div
-                    v-if="file && file.url"
-                    class="arco-upload-list-picture custom-upload-avatar"
-                  >
+                  <div v-if="file && file.url" class="arco-upload-list-picture custom-upload-avatar">
                     <cs-image v-if="!file.uid" :src="file.url" />
                     <img v-else :src="file.url" />
                     <div class="arco-upload-list-picture-mask">
@@ -175,9 +135,7 @@
                   <div v-else class="arco-upload-picture-card">
                     <div class="arco-upload-picture-card-text">
                       <IconPlus />
-                      <div style="margin-top: 10px; font-weight: 600"
-                        >Upload</div
-                      >
+                      <div style="margin-top: 10px; font-weight: 600">Upload</div>
                     </div>
                   </div>
                 </div>
@@ -197,12 +155,7 @@
 
 <script lang="ts" setup>
 import { getAllCategory } from '@/api/category'
-import {
-  addPlant,
-  deletePlantById,
-  getPlantList,
-  updatePlant,
-} from '@/api/plant'
+import { addPlant, deletePlantById, getPlantList, updatePlant } from '@/api/plant'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
@@ -212,21 +165,11 @@ import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive, ref, watch } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
-const {
-  isEdit,
-  modalVisible,
-  showModal: _showModal,
-  cancelModal: _cancelModal,
-  clearModal: _clearModal,
-} = useModal()
+const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal: _clearModal } = useModal()
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
-const { customRequest, file, onChange, onProgress } = useUpload(
-  formModel,
-  'url'
-)
-const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getPlantList, deletePlantById)
+const { customRequest, file, onChange, onProgress } = useUpload(formModel, 'url')
+const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(getPlantList, deletePlantById)
 const newRenderData = ref([])
 const options = ref()
 

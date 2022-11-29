@@ -10,6 +10,10 @@ export interface QueryDeleteParams {
   id: string | number
 }
 
+export interface ActionResponse {
+  success?: boolean
+  message?: string
+}
 export function uploadImg(data: FormData) {
   return service.post('/file/uploadFile', data)
 }
