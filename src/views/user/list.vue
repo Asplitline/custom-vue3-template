@@ -17,7 +17,7 @@
       <a-table
         row-key="id"
         :loading="loading"
-        :pagination="pagination"
+        :current="pagination"
         :data="renderData"
         :bordered="false"
         :expandable="expandable"
@@ -47,10 +47,10 @@
             </template>
           </a-table-column> -->
           <a-table-column title="创建时间" data-index="ctime">
-            <template #cell="{ record }"> {{ format(record.ctime) }} </template>
+            <template #cell="{ record }"> {{ format?.(record.ctime) }} </template>
           </a-table-column>
           <a-table-column title="更新时间" data-index="utime">
-            <template #cell="{ record }"> {{ format(record.utime) }} </template>
+            <template #cell="{ record }"> {{ format?.(record.utime) }} </template>
           </a-table-column>
 
           <a-table-column title="操作" data-index="operations">
@@ -168,10 +168,13 @@ import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
+import { formateDateKey, handleCodeKey } from '@/types/provide'
 import { inject, onMounted, reactive } from 'vue'
 
-const format = inject('formateDate')
-const handleCode = inject('handleCode')
+const format = inject(formateDateKey)
+const handleCode = inject(handleCodeKey)
+// const format = inject('formateDate') as (...arg: any[]) => void
+// const handleCode = inject('handleCode') as (...arg: any[]) => void
 const expandable = reactive({
   title: '#',
   width: 80,
@@ -225,10 +228,10 @@ const submitForm = () => {
     if (err) return
     if (isEdit.value) {
       const { success } = await updateUser(formModel.value)
-      handleCode(success, ['修改用户成功', '修改用户失败'], () => reload())
+      handleCode?.(success, ['修改用户成功', '修改用户失败'], () => reload())
     } else {
       const { success } = await addUser(formModel.value)
-      handleCode(success, ['添加用户成功', '添加用户失败'], () => reload())
+      handleCode?.(success, ['添加用户成功', '添加用户失败'], () => reload())
     }
   })
 }

@@ -10,8 +10,9 @@ import GlobalSetting from '@/components/global-setting/index.vue'
 import { Message } from '@arco-design/web-vue'
 import dayjs from 'dayjs'
 import { provide } from 'vue'
+import { formatDateFunc, formateDateKey, handleCodeFunc, handleCodeKey } from './types/provide'
 
-provide('handleCode', (flag: boolean, message: string[] = [], success?: () => void, fail?: () => void) => {
+const handleCode: handleCodeFunc = (flag, message = [], success, fail) => {
   const [successText, errorText] = message
   if (flag) {
     if (successText) Message.success(successText)
@@ -20,10 +21,14 @@ provide('handleCode', (flag: boolean, message: string[] = [], success?: () => vo
     if (errorText) Message.error(errorText)
     fail?.()
   }
-})
+}
 
-provide('formateDate', (v): string => {
+provide(handleCodeKey, handleCode)
+
+const formatDate: formatDateFunc = (v) => {
   const value = dayjs(v).format('YYYY-MM-DD HH:mm:ss')
   return value === 'Invalid Date' ? '暂无' : value
-})
+}
+
+provide(formateDateKey, formatDate)
 </script>
