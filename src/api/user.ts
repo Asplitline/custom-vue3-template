@@ -21,11 +21,11 @@ export function logout() {
 //   return service.post<UserState>('/api/user/info')
 // }
 
-export function addUser(data: any): Promise<any> {
-  return service.post('/user/login', data)
+export function addUser(data: any) {
+  return service.post<any, ActionResponse>('/user/login', data)
 }
-export function updateUser(data: any): Promise<any> {
-  return service.put('/user/updateUser', data)
+export function updateUser(data: any) {
+  return service.put<any, ActionResponse>('/user/updateUser', data)
 }
 
 export function getUserList(params: QueryParams) {
