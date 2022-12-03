@@ -6,10 +6,10 @@ export function getPlantList(params: QueryParams) {
 }
 
 export function addPlant(data: any) {
-  return service.post<QueryParams>('/apiPlant/insert', data)
+  return service.post<any, ActionResponse>('/apiPlant/insert', data)
 }
 export function updatePlant(data: any) {
-  return service.put<QueryParams>('/apiPlant/update', data)
+  return service.put<any, ActionResponse>('/apiPlant/update', data)
 }
 
 export function deletePlantById(params: QueryDeleteParams) {

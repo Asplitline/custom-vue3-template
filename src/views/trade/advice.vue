@@ -5,7 +5,7 @@
       <a-table
         row-key="id"
         :loading="loading"
-        :pagination="pagination"
+        :current="pagination"
         :data="renderData"
         :bordered="false"
         @page-change="onPageChange"
@@ -23,12 +23,12 @@
 
           <a-table-column title="创建时间" data-index="ctime">
             <template #cell="{ record }">
-              {{ format(record.ctime) }}
+              {{ format?.(record.ctime) }}
             </template>
           </a-table-column>
           <a-table-column title="更新时间" data-index="utime">
             <template #cell="{ record }">
-              {{ format(record.utime) }}
+              {{ format?.(record.utime) }}
             </template>
           </a-table-column>
 
@@ -113,21 +113,21 @@ const submitForm = () => {
       state: 1,
       utime: Date.now(),
     })
-    handleCode(success, ['处理投诉成功', '处理投诉失败'], () => reload())
+    handleCode?.(success, ['处理投诉成功', '处理投诉失败'], () => reload())
     // if (isEdit.value) {
     //   const { success } = await updateAdvice({
     //     ...formModel.value,
     //     address: formModel.value.address.join('-'),
     //     updateTime: Date.now(),
     //   })
-    //   handleCode(success, ['修改植物成功', '修改植物失败'], () => reload())
+    //   handleCode?.(success, ['修改植物成功', '修改植物失败'], () => reload())
     // } else {
     //   const { success } = await addAdvice({
     //     ...formModel.value,
     //     address: formModel.value.address.join('-'),
     //     status: 0,
     //   })
-    //   handleCode(success, ['添加植物成功', '添加植物失败'], () => reload())
+    //   handleCode?.(success, ['添加植物成功', '添加植物失败'], () => reload())
     // }
   })
 }

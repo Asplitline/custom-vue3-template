@@ -168,13 +168,11 @@ import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
-import { formateDateKey, handleCodeKey } from '@/types/provide'
 import { inject, onMounted, reactive } from 'vue'
+import { formateDateKey, handleCodeKey } from '@/types/provide'
 
 const format = inject(formateDateKey)
 const handleCode = inject(handleCodeKey)
-// const format = inject('formateDate') as (...arg: any[]) => void
-// const handleCode = inject('handleCode') as (...arg: any[]) => void
 const expandable = reactive({
   title: '#',
   width: 80,
@@ -187,12 +185,12 @@ const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
 const handleRow = (row: any) => {
   const res = [
     { label: '账号', value: row.username },
-    { label: '昵称', value: row.name },
-    { label: '电子邮箱', value: row.email },
+    { label: '昵称', value: row.name || '无' },
+    { label: '电子邮箱', value: row.email || '无' },
     { label: '性别', value: row.state === '0' ? '男' : '女' },
-    { label: 'QQ', value: row.qq },
-    { label: '手机号', value: row.phone },
-    { label: '个人简介', value: row.description },
+    { label: 'QQ', value: row.qq || '无' },
+    { label: '手机号', value: row.phone || '无' },
+    { label: '个人简介', value: row.description || '无' },
   ]
   return res
 }

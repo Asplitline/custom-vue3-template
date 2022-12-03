@@ -6,10 +6,10 @@ export function getContentList(params: QueryParams) {
 }
 
 export function addContent(data: any) {
-  return service.post<QueryParams>('/apiContent/insert', data)
+  return service.post<any, ActionResponse>('/apiContent/insert', data)
 }
 export function updateContent(data: any) {
-  return service.put<QueryParams>('/apiContent/update', data)
+  return service.put<any, ActionResponse>('/apiContent/update', data)
 }
 
 export function deleteContentById(params: QueryDeleteParams) {

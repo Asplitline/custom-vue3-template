@@ -17,7 +17,7 @@
       <a-table
         row-key="id"
         :loading="loading"
-        :pagination="pagination"
+        :current="pagination"
         :data="filterTableData"
         :bordered="false"
         @page-change="onPageChange"
@@ -32,12 +32,12 @@
           <a-table-column title="描述" data-index="description" :width="400" />
           <a-table-column title="创建时间" data-index="createTime">
             <template #cell="{ record }">
-              {{ format(record.createTime) }}
+              {{ format?.(record.createTime) }}
             </template>
           </a-table-column>
           <a-table-column title="更新时间" data-index="updateTime">
             <template #cell="{ record }">
-              {{ format(record.updateTime) }}
+              {{ format?.(record.updateTime) }}
             </template>
           </a-table-column>
 
@@ -223,10 +223,10 @@ const submitForm = () => {
         ...formModel.value,
         updateTime: Date.now(),
       })
-      handleCode(success, ['修改分类成功', '修改分类失败'], () => reload())
+      handleCode?.(success, ['修改分类成功', '修改分类失败'], () => reload())
     } else {
       const { success } = await addCategory(formModel.value)
-      handleCode(success, ['添加分类成功', '添加分类失败'], () => reload())
+      handleCode?.(success, ['添加分类成功', '添加分类失败'], () => reload())
     }
   })
 }

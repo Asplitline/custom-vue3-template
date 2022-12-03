@@ -5,6 +5,7 @@ import User from './user'
 import Config from './config'
 import Trade from './trade'
 import Plant from './plant'
+import Post from './post'
 /** simple end */
 
 export default [
@@ -13,6 +14,6 @@ export default [
   Config,
   User,
   Trade,
-  Plant,
+  Post,
   /** simple end */
 ]

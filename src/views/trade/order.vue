@@ -5,7 +5,7 @@
       <a-table
         row-key="id"
         :loading="loading"
-        :pagination="pagination"
+        :current="pagination"
         :data="renderData"
         :bordered="false"
         @page-change="onPageChange"
@@ -26,12 +26,12 @@
 
           <a-table-column title="创建时间" data-index="createTime">
             <template #cell="{ record }">
-              {{ format(record.createTime) }}
+              {{ format?.(record.createTime) }}
             </template>
           </a-table-column>
           <a-table-column title="更新时间" data-index="updateTime">
             <template #cell="{ record }">
-              {{ format(record.updateTime) }}
+              {{ format?.(record.updateTime) }}
             </template>
           </a-table-column>
 
@@ -150,7 +150,7 @@ const submitForm = async () => {
     ...formModel.value,
     status: currentStatus.value?.nextStatus,
   })
-  handleCode(success, [`${currentText}成功`, `${currentText}失败`], () => reload())
+  handleCode?.(success, [`${currentText}成功`, `${currentText}失败`], () => reload())
 }
 
 const confirmModal = () => submitForm()

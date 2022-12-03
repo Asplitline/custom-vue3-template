@@ -6,10 +6,10 @@ export function getAdviceList(params: QueryParams) {
 }
 
 export function addAdvice(data: any) {
-  return service.post<QueryParams>('/addvice/addAddvice', data)
+  return service.post<any, ActionResponse>('/addvice/addAddvice', data)
 }
 export function updateAdvice(data: any) {
-  return service.post<QueryParams>('/addvice/updateAddvice', data)
+  return service.post<any, ActionResponse>('/addvice/updateAddvice', data)
 }
 
 export function deleteAdviceById(params: QueryDeleteParams) {

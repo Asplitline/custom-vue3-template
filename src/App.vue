@@ -26,7 +26,7 @@ const handleCode: handleCodeFunc = (flag, message = [], success, fail) => {
 provide(handleCodeKey, handleCode)
 
 const formatDate: formatDateFunc = (v) => {
-  const value = dayjs(v).format('YYYY-MM-DD HH:mm:ss')
+  const value = dayjs(v).format?.('YYYY-MM-DD HH:mm:ss')
   return value === 'Invalid Date' ? '暂无' : value
 }
 

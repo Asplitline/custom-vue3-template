@@ -5,7 +5,7 @@
       <a-row style="margin-bottom: 20px">
         <a-col :span="24" style="text-align: right">
           <a-space>
-            <a-button type="primary" @click="showModal()">
+            <a-button type="primary" @click="skipPostEditor()">
               <template #icon>
                 <icon-plus />
               </template>
@@ -163,6 +163,7 @@ import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
 import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const { formRef, formModel, resetForm } = useForm()
 const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal: _clearModal } = useModal()
@@ -184,74 +185,79 @@ const formRules = reactive({
 })
 
 const fetchCategory = async () => {
-  const { data } = await getAllCategory()
-  const parents = data.filter((i) => !i.pid)
-  options.value = parents
-    .map((i) => {
-      const children = data.filter((j) => i.id === j.pid)
-      return {
-        ...i,
-        children,
-      }
-    })
-    .filter((i) => i.children?.length > 0)
-  newRenderData.value = renderData.value.map((i) => {
-    const category = data.find((j) => j.id === i.type)
-    return {
-      ...i,
-      category,
-    }
-  })
-  console.log('newRenderData.value :', newRenderData.value)
+  // const { data } = await getAllCategory()
+  // const parents = data.filter((i) => !i.pid)
+  // options.value = parents
+  //   .map((i) => {
+  //     const children = data.filter((j) => i.id === j.pid)
+  //     return {
+  //       ...i,
+  //       children,
+  //     }
+  //   })
+  //   .filter((i) => i.children?.length > 0)
+  // newRenderData.value = renderData.value.map((i) => {
+  //   const category = data.find((j) => j.id === i.type)
+  //   return {
+  //     ...i,
+  //     category,
+  //   }
+  // })
+  // console.log('newRenderData.value :', newRenderData.value)
 }
 
-const showModal = (row?: any) => {
-  _showModal(formModel, () => {
-    if (row) {
-      isEdit.value = true
-      file.value = { url: row.url }
-      formModel.value = deepClone({ ...row, address: row.address.split('-') })
-    } else {
-      isEdit.value = false
-      formModel.value = {}
-    }
-  })
-}
+// const showModal = (row?: any) => {
+//   _showModal(formModel, () => {
+//     if (row) {
+//       isEdit.value = true
+//       file.value = { url: row.url }
+//       formModel.value = deepClone({ ...row, address: row.address.split('-') })
+//     } else {
+//       isEdit.value = false
+//       formModel.value = {}
+//     }
+//   })
+// }
 
-const cancelModal = () =>
-  _cancelModal(() => {
-    file.value = null
-  })
+// const cancelModal = () =>
+//   _cancelModal(() => {
+//     file.value = null
+//   })
 
-const reload = () => {
-  cancelModal()
-  fetchData(fetchCategory)
-}
+// const reload = () => {
+//   cancelModal()
+//   fetchData(fetchCategory)
+// }
 
 const submitForm = () => {
-  formRef.value.validate(async (err) => {
-    if (err) return
-    if (isEdit.value) {
-      const { success } = await updatePlant({
-        ...formModel.value,
-        address: formModel.value.address.join('-'),
-        updateTime: Date.now(),
-      })
-      handleCode?.(success, ['修改植物成功', '修改植物失败'], () => reload())
-    } else {
-      const { success } = await addPlant({
-        ...formModel.value,
-        address: formModel.value.address.join('-'),
-        status: 0,
-      })
-      handleCode?.(success, ['添加植物成功', '添加植物失败'], () => reload())
-    }
-  })
+  // formRef.value.validate(async (err) => {
+  //   if (err) return
+  //   if (isEdit.value) {
+  //     const { success } = await updatePlant({
+  //       ...formModel.value,
+  //       address: formModel.value.address.join('-'),
+  //       updateTime: Date.now(),
+  //     })
+  //     handleCode?.(success, ['修改植物成功', '修改植物失败'], () => reload())
+  //   } else {
+  //     const { success } = await addPlant({
+  //       ...formModel.value,
+  //       address: formModel.value.address.join('-'),
+  //       status: 0,
+  //     })
+  //     handleCode?.(success, ['添加植物成功', '添加植物失败'], () => reload())
+  //   }
+  // })
 }
 // watch(renderData, (pre, cur) => {
 //   console.log('pre :', pre)
 //   console.log('cur :', cur)
 // })
+const router = useRouter()
+const skipPostEditor = () => {
+  router.push({ name: 'post-editor' })
+}
+
 const confirmModal = () => submitForm()
 onMounted(async () => {
   await fetchData()

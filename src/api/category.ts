@@ -9,10 +9,10 @@ export function getCategoryList(params: QueryParams) {
 }
 
 export function addCategory(data: any) {
-  return service.post<QueryParams>('/apiLx/insert', data)
+  return service.post<any, ActionResponse>('/apiLx/insert', data)
 }
 export function updateCategory(data: any) {
-  return service.put<QueryParams>('/apiLx/update', data)
+  return service.put<any, ActionResponse>('/apiLx/update', data)
 }
 
 export function deleteCategoryById(params: QueryDeleteParams) {

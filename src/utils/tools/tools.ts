@@ -64,7 +64,8 @@ export function deDuplication(arr: any[]) {
 }
 
 export function filterEmptyValue(obj: any) {
-  const result = {}
+  // todo any to ts support
+  const result: any = {}
   Reflect.ownKeys(obj).forEach((key) => {
     if (!isEmpty(obj[key])) {
       result[key] = obj[key]
@@ -84,10 +85,10 @@ export function filterEmptyValue(obj: any) {
  * const omitObj1 = omit(obj, 'a') // { a: 1, b: 2, c: 3 }
  * const omitObj2 = omit(obj, ['a', 'c']) // { b: 2 }
  */
-export function omit(obj, omitKey: string | string[]) {
+export function omit(obj: any, omitKey: string | string[]) {
   const allKeys = Object.keys(obj)
   if (Array.isArray(omitKey)) {
-    const rest = {}
+    const rest: any = {}
     allKeys.forEach((key) => {
       if (!omitKey.includes(key)) {
         rest[key] = obj[key]
@@ -108,10 +109,10 @@ export function omit(obj, omitKey: string | string[]) {
  * const pickObj1 = pick(obj, 'a') // { a: 1 }
  * const pickObj2 = pick(obj, ['a', 'c']) // { a: 1, c: 3 }
  */
-export function pick(obj, pickKey: string | string[]) {
+export function pick(obj: any, pickKey: string | string[]) {
   const allKeys = Object.keys(obj)
   if (Array.isArray(pickKey)) {
-    const rest = {}
+    const rest: any = {}
     pickKey.forEach((key) => {
       if (allKeys.includes(key)) {
         rest[key] = obj[key]

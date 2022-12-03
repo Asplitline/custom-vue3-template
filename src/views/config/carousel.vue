@@ -17,7 +17,7 @@
       <a-table
         row-key="id"
         :loading="loading"
-        :pagination="pagination"
+        :current="pagination"
         :data="renderData"
         :bordered="false"
         @page-change="onPageChange"
@@ -38,10 +38,10 @@
             </template>
           </a-table-column>
           <a-table-column title="创建时间" data-index="ctime">
-            <template #cell="{ record }"> {{ format(record.ctime) }} </template>
+            <template #cell="{ record }"> {{ format?.(record.ctime) }} </template>
           </a-table-column>
           <a-table-column title="更新时间" data-index="utime">
-            <template #cell="{ record }"> {{ format(record.utime) }} </template>
+            <template #cell="{ record }"> {{ format?.(record.utime) }} </template>
           </a-table-column>
 
           <a-table-column title="操作" data-index="operations">
@@ -56,7 +56,7 @@
       </a-table>
     </a-card>
 
-    <a-modal v-model:visible="modalVisible" @before-ok="confirmModal" @before-close="clearModal">
+    <a-modal v-model:visible="modalVisible" @before-ok="confirmModal">
       <template #title>{{ isEdit ? '修改轮播图' : '新增轮播图' }} </template>
       <div>
         <a-form ref="formRef" :model="formModel" :rules="formRules">
@@ -121,20 +121,21 @@
 </template>
 
 <script lang="ts" setup>
-import { getCarouselList, deleteCarouselById, updateCarousel, addCarousel } from '@/api/carousel'
+import { addCarousel, deleteCarouselById, getCarouselList, updateCarousel } from '@/api/carousel'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
-import useTable from '@/hooks/useTable'
-import useUpload from '@/hooks/useUpload'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
-import { deepClone } from '@/utils/tools'
-import { inject, onMounted, reactive, ref } from 'vue'
+import useTable from '@/hooks/useTable'
+import useUpload from '@/hooks/useUpload'
+import { inject, onMounted, reactive } from 'vue'
+import { formateDateKey, handleCodeKey } from '@/types/provide'
+
+const format = inject(formateDateKey)
+const handleCode = inject(handleCodeKey)
 
 const { formRef, formModel, resetForm } = useForm()
-const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal, clearModal: _clearModal } = useModal()
+const { isEdit, modalVisible, showModal: _showModal, cancelModal: _cancelModal } = useModal(formModel)
 const { customRequest, file, onChange, onProgress } = useUpload(formModel, 'url')
-const format = inject('formateDate')
-const handleCode = inject('handleCode')
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(
   getCarouselList,
   deleteCarouselById
@@ -147,37 +148,31 @@ const formRules = reactive({
 })
 
 const showModal = (row?: any) => {
-  _showModal(formModel, () => {
-    if (row) {
-      isEdit.value = true
-      file.value = { url: row.url }
-      formModel.value = deepClone(row)
-    } else {
-      isEdit.value = false
-    }
-  })
+  console.log('row: ', row)
+  _showModal(row)
+  if (row?.url) {
+    file.value = { url: row.url }
+  }
 }
-const cancelModal = () =>
-  _cancelModal(() => {
-    file.value = null
-  })
-
-const clearModal = () => _cancelModal(resetForm)
+const cancelModal = () => {
+  _cancelModal()
+  resetForm()
+  file.value = null
+}
 
 const reload = () => {
   cancelModal()
   fetchData()
 }
-
 const submitForm = () => {
-  formRef.value.validate(async (err) => {
+  formRef.value.validate(async (err: any) => {
     if (err) return
     if (isEdit.value) {
       const { success } = await updateCarousel(formModel.value)
-      handleCode(success, ['修改轮播图成功', '修改轮播图失败'], () => reload())
+      handleCode?.(success, ['修改轮播图成功', '修改轮播图失败'], () => reload())
     } else {
       const { success } = await addCarousel(formModel.value)
-      handleCode(success, ['添加轮播图成功', '添加轮播图失败'], () => reload())
+      handleCode?.(success, ['添加轮播图成功', '添加轮播图失败'], () => reload())
     }
   })
 }

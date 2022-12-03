@@ -18,15 +18,15 @@ export default {
         roles: ['*'],
       },
     },
-    {
-      path: 'category',
-      name: 'config-category',
-      component: () => import('@/views/config/category.vue'),
-      meta: {
-        locale: '植物分类',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: 'category',
+    //   name: 'config-category',
+    //   component: () => import('@/views/config/category.vue'),
+    //   meta: {
+    //     locale: '植物分类',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
   ],
 }
