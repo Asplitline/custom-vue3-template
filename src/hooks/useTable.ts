@@ -33,7 +33,7 @@ export default function useTable(
 
   const pagination = ref<PaginationProps>(paginationDefault)
 
-  const renderData = ref([])
+  const renderData = ref<any[]>([])
 
   const fetchData = async (callback?: () => void) => {
     try {

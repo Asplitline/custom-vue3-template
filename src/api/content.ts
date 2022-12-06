@@ -1,5 +1,5 @@
-import service, { handleQuery } from './index'
-import { QueryDeleteParams, QueryParams } from './common'
+import { ActionResponse, QueryDeleteParams, QueryParams } from './common'
+import service from './index'
 
 export function getContentList(params: QueryParams) {
   return service.get<QueryParams>('/apiContent/pageList', { params })

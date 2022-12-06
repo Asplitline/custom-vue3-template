@@ -29,7 +29,7 @@ export function updateUser(data: any) {
 }
 
 export function getUserList(params: QueryParams) {
-  return service.get<QueryParams>('/user/getUser', { params })
+  return service.get<any, ActionResponse>('/user/getUser', { params })
 }
 
 export function deleteUserById(params: QueryDeleteParams) {

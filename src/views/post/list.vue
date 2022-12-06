@@ -20,7 +20,7 @@
         :current="pagination"
         :data="renderData"
         :bordered="false"
-        @page-change="(v) => onPageChange(v, fetchCategory)"
+        @page-change="onPageChange"
       >
         <template #columns>
           <a-table-column title="标题" data-index="title" />
@@ -45,8 +45,8 @@
 
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
-              <a-button type="text" size="small" @click="showModal(record)"> 修改 </a-button>
-              <a-popconfirm :content="`是否确定要删除: ${record.name}`" @ok="deleteData(record.id, fetchCategory)">
+              <a-button type="text" size="small" @click="skipPostEditor(record.id)"> 修改 </a-button>
+              <a-popconfirm :content="`是否确定要删除: ${record.title}`" @ok="deleteData(record.id)">
                 <a-button type="text" status="danger" size="small"> 删除 </a-button>
               </a-popconfirm>
             </template>
@@ -97,8 +97,8 @@ const submitForm = () => {
 //   console.log('pre :', pre)
 //   console.log('cur :', cur)
 // })
-const skipPostEditor = () => {
-  router.push({ name: 'post-editor' })
+const skipPostEditor = (id?: string) => {
+  router.push({ name: 'post-editor', query: { id } })
 }
 
 onMounted(() => {

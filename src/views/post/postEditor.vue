@@ -26,21 +26,24 @@
 </template>
 
 <script setup lang="ts">
-import { handleCode, isEmpty } from '@/utils/tools'
+import { deepClone, handleCode, isEmpty } from '@/utils/tools'
 import { Message } from '@arco-design/web-vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { onBeforeUnmount, onMounted, reactive, shallowRef } from 'vue'
-import { addPost, updatePost } from '@/api/post'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef } from 'vue'
+import { addPost, updatePost, getPostById } from '@/api/post'
 import { useUserStore } from '@/store'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const editorRef = shallowRef()
 const formModel = reactive({
   title: '',
   html: '',
 })
+
+const tempData = ref({})
 const mode = 'default'
 // 内容 HTML
 
@@ -58,6 +61,20 @@ const handleCreated = (editor: any) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
 
+const isEdit = computed(() => !!route.query.id)
+
+const fetchPostDetail = async () => {
+  if (!isEdit.value) return
+  const { data } = await getPostById(route.query.id as string)
+  // formModel = deepClone({
+  //   title: data.title,
+  //   html: data.htmlContent,
+  // })
+  tempData.value = data
+  formModel.title = data.title
+  editorRef.value.setHtml(data.htmlContent)
+}
+
 const submitPost = async () => {
   if (isEmpty(formModel.title)) {
     Message.warning('文章标题不能为空')
@@ -67,33 +84,38 @@ const submitPost = async () => {
     Message.error('内容不能为空')
     return
   }
+
   const form = {
-    createTime: Date.now(),
-    authorId: userStore.info.id,
     title: formModel.title,
     htmlContent: formModel.html,
     textContent: editorRef.value.getText(),
   }
-  const { success } = await addPost({
-    ...form,
-  })
 
-  handleCode?.(success, ['添加文章成功', '添加文章失败'], () => {
-    console.log('111 :', 111)
-  })
-  // formRef.value.validate(async (err: any) => {
-  //   if (err) return
-  //   if (isEdit.value) {
-  //     const { success } = await updateUser(formModel.value)
-  //     handleCode?.(success, ['修改文章成功', '修改文章失败'], () => reload())
-  //   } else {
-  //     const { success } = await addUser(formModel.value)
-  //     handleCode?.(success, ['添加文章成功', '添加文章失败'], () => reload())
-  //   }
-  // })
+  if (!isEdit.value) {
+    const { success } = await addPost({
+      createTime: Date.now(),
+      authorId: userStore.info.id,
+      lx: '',
+      ...form,
+    })
+    handleCode?.(success, ['添加文章成功', '添加文章失败'], () => {
+      router.push({ name: 'post-list' })
+    })
+  } else {
+    const { success } = await updatePost({
+      ...tempData.value,
+      ...form,
+      updateTime: Date.now(),
+    })
+    handleCode?.(success, ['修改文章成功', '修改文章失败'], () => {
+      router.push({ name: 'post-list' })
+    })
+  }
 }
 
-onMounted(() => {})
+onMounted(() => {
+  fetchPostDetail()
+})
 </script>
 
 <style lang="less" scoped>

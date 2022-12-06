@@ -1,8 +1,15 @@
 import { ActionResponse, QueryDeleteParams, QueryParams } from './common'
 import service from './index'
 
+export function getAllPost() {
+  return service.get('/apiPost/list')
+}
 export function getPostList(params: QueryParams) {
   return service.get<QueryParams>('/apiPost/pageList', { params })
+}
+
+export function getPostById(id: string) {
+  return service.get<any, ActionResponse>('/apiPost/getById', { params: { id } })
 }
 
 export function addPost(data: any) {
