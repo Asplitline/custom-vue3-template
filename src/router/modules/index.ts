@@ -3,9 +3,8 @@
 import Exception from './exception'
 import User from './user'
 import Config from './config'
-import Trade from './trade'
-import Plant from './plant'
 import Post from './post'
+import Process from './process'
 /** simple end */
 
 export default [
@@ -13,7 +12,7 @@ export default [
   Exception,
   Config,
   User,
-  Trade,
   Post,
+  Process,
   /** simple end */
 ]

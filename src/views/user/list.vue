@@ -36,8 +36,9 @@
           <a-table-column title="昵称" data-index="name" />
           <a-table-column title="身份" data-index="level">
             <template #cell="{ record }">
-              <a-tag v-if="record.level == 1" color="red">老师 </a-tag>
-              <a-tag v-else color="blue">学生</a-tag>
+              <a-tag v-if="record.level == 0" color="green">学生 </a-tag>
+              <a-tag v-else-if="record.level == 1" color="blue">老师</a-tag>
+              <a-tag v-else color="red">管理员</a-tag>
             </template>
           </a-table-column>
           <!-- <a-table-column title="状态" data-index="state">
@@ -98,6 +99,7 @@
             <a-radio-group v-model="formModel.level" :default-value="false">
               <a-radio value="0">学生</a-radio>
               <a-radio value="1">老师</a-radio>
+              <a-radio value="2">管理员</a-radio>
             </a-radio-group>
           </a-form-item>
           <!-- <a-form-item field="state" label="状态">
