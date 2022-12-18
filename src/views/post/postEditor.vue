@@ -3,11 +3,17 @@
     <a-card class="post-editor">
       <div>
         <div class="pe-box">
-          <div class="flex">
+          <div class="item">
             <span>文章标题</span>
             <a-input v-model="formModel.title" class="pe-input" placeholder="请输入文章标题" />
           </div>
-          <a-button @click="router.push({ name: 'post' })">返回</a-button>
+          <div class="item">
+            <span>文章标题</span>
+            <a-select v-model="formModel.lx" style="flex: 1" placeholder="请选择文章类型">
+              <a-option v-for="opt in categoryList" :key="opt.id" :value="opt.id">{{ opt.name }}</a-option>
+            </a-select>
+          </div>
+          <a-button @click="router.push({ name: 'post-list' })">返回</a-button>
         </div>
         <Toolbar :editor="editorRef" class="pe-toolbar" :default-config="toolbarConfig" :mode="mode" />
         <Editor
@@ -26,19 +32,20 @@
 </template>
 
 <script setup lang="ts">
-import { deepClone, handleCode, isEmpty } from '@/utils/tools'
+import { addPost, getPostById, updatePost } from '@/api/post'
+import { useUserStore } from '@/store'
+import { handleCode, isEmpty } from '@/utils/tools'
 import { Message } from '@arco-design/web-vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef } from 'vue'
-import { addPost, updatePost, getPostById } from '@/api/post'
-import { useUserStore } from '@/store'
 import { useRoute, useRouter } from 'vue-router'
+import { categoryList } from '@/utils/static'
 
 const router = useRouter()
 const route = useRoute()
 const editorRef = shallowRef()
-const formModel = reactive({
+const formModel = reactive<{ title: string; html: string; lx?: number }>({
   title: '',
   html: '',
 })
@@ -66,18 +73,19 @@ const isEdit = computed(() => !!route.query.id)
 const fetchPostDetail = async () => {
   if (!isEdit.value) return
   const { data } = await getPostById(route.query.id as string)
-  // formModel = deepClone({
-  //   title: data.title,
-  //   html: data.htmlContent,
-  // })
   tempData.value = data
   formModel.title = data.title
+  formModel.lx = +data.lx
   editorRef.value.setHtml(data.htmlContent)
 }
 
 const submitPost = async () => {
   if (isEmpty(formModel.title)) {
     Message.warning('文章标题不能为空')
+    return
+  }
+  if (isEmpty(formModel.lx)) {
+    Message.error('请选择文章类型')
     return
   }
   if (isEmpty(formModel.html)) {
@@ -89,13 +97,14 @@ const submitPost = async () => {
     title: formModel.title,
     htmlContent: formModel.html,
     textContent: editorRef.value.getText(),
+    lx: formModel.lx,
   }
 
   if (!isEdit.value) {
     const { success } = await addPost({
+      id: Date.now() % 1000000,
       createTime: Date.now(),
       authorId: userStore.info.id,
-      lx: '',
       ...form,
     })
     handleCode?.(success, ['添加文章成功', '添加文章失败'], () => {
@@ -134,6 +143,10 @@ onMounted(() => {
     }
     span {
       margin-right: 10px;
+    }
+    .item {
+      display: flex;
+      align-items: center;
     }
   }
   .pe-toolbar {

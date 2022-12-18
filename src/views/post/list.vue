@@ -25,6 +25,12 @@
         <template #columns>
           <a-table-column title="标题" data-index="title" />
 
+          <a-table-column title="课题" data-index="lx">
+            <template #cell="{ record }">
+              {{ findCategory(record.lx)?.name || '无' }}
+            </template>
+          </a-table-column>
+
           <a-table-column title="回复数量" data-index="replyNum" />
 
           <a-table-column title="创建时间" data-index="createTime">
@@ -60,43 +66,19 @@
 <script lang="ts" setup>
 import { deletePostById, getPostList } from '@/api/post'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
-import useForm from '@/hooks/useForm'
 import useTable from '@/hooks/useTable'
-import { formateDateKey, handleCodeKey } from '@/types/provide'
+import { formateDateKey } from '@/types/provide'
+import { categoryList } from '@/utils/static'
 import { inject, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-const { formRef, formModel, resetForm } = useForm()
 const format = inject(formateDateKey)
-const handleCode = inject(handleCodeKey)
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } = useTable(getPostList, deletePostById)
-console.log('renderData: ', renderData)
 const router = useRouter()
 
-const submitForm = () => {
-  // formRef.value.validate(async (err) => {
-  //   if (err) return
-  //   if (isEdit.value) {
-  //     const { success } = await updatePlant({
-  //       ...formModel.value,
-  //       address: formModel.value.address.join('-'),
-  //       updateTime: Date.now(),
-  //     })
-  //     handleCode?.(success, ['修改植物成功', '修改植物失败'], () => reload())
-  //   } else {
-  //     const { success } = await addPlant({
-  //       ...formModel.value,
-  //       address: formModel.value.address.join('-'),
-  //       status: 0,
-  //     })
-  //     handleCode?.(success, ['添加植物成功', '添加植物失败'], () => reload())
-  //   }
-  // })
+const findCategory = (lx: number) => {
+  return categoryList.find((i) => i.id === +lx)
 }
-// watch(renderData, (pre, cur) => {
-//   console.log('pre :', pre)
-//   console.log('cur :', cur)
-// })
 const skipPostEditor = (id?: string) => {
   router.push({ name: 'post-editor', query: { id } })
 }
