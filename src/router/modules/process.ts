@@ -13,7 +13,7 @@ export default {
       name: 'process-list',
       component: () => import('@/views/process/list.vue'),
       meta: {
-        locale: '流程管理',
+        locale: '入党申请',
         requiresAuth: true,
         roles: ['*'],
       },

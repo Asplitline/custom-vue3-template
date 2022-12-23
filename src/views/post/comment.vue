@@ -52,7 +52,6 @@ import useTable from '@/hooks/useTable'
 import { useUpdaterStore } from '@/store'
 import { formateDateKey, handleCodeKey } from '@/types/provide'
 import { inject, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 // const updateStore =
 const updaterStore = useUpdaterStore()
 
@@ -66,6 +65,7 @@ const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
 const handleData = async () => {
   renderData.value = renderData.value.map((i: any) => {
     const username = updaterStore.getUserById(i.userId)?.username || '已注销'
+    console.log('updaterStore.getUserById(i.userId): ', updaterStore.getUserById(i.userId))
     const title = updaterStore.getPostById(i.postId)?.title || '暂无'
     return {
       ...i,

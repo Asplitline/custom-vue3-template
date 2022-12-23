@@ -13,7 +13,7 @@ const useUpdaterStore = defineStore('updater', {
       return (id: number): any => state.postList.find((i: { id: number }) => i.id === +id)
     },
     getUserById: (state) => {
-      return (id: string): any => state.postList.find((i: { id: string }) => i.id === id)
+      return (id: string): any => state.userList.find((i: { id: string }) => i.id === id)
     },
   },
 

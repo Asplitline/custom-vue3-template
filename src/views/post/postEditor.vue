@@ -34,13 +34,13 @@
 <script setup lang="ts">
 import { addPost, getPostById, updatePost } from '@/api/post'
 import { useUserStore } from '@/store'
+import { categoryList } from '@/utils/static'
 import { handleCode, isEmpty } from '@/utils/tools'
 import { Message } from '@arco-design/web-vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { categoryList } from '@/utils/static'
 
 const router = useRouter()
 const route = useRoute()
