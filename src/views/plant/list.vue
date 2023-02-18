@@ -23,13 +23,13 @@
         @page-change="(v) => onPageChange(v, fetchCategory)"
       >
         <template #columns>
-          <a-table-column title="植物插图" data-index="url">
+          <a-table-column title="农产插图" data-index="url">
             <template #cell="{ record }">
               <cs-image width="60" height="60" :src="record.url"></cs-image>
             </template>
           </a-table-column>
-          <a-table-column title="植物名称" data-index="name" />
-          <a-table-column title="植物分类" data-index="type">
+          <a-table-column title="农产名称" data-index="name" />
+          <a-table-column title="农产分类" data-index="type">
             <template #cell="{ record }">
               <a-tag v-if="record.category?.name" color="blue">{{
                 record.category.name
@@ -37,7 +37,7 @@
               <a-tag v-else color="gray"> 未知分类 </a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="植物价格" data-index="price" />
+          <a-table-column title="农产价格" data-index="price" />
           <a-table-column title="种植地点" data-index="address" />
           <a-table-column title="当前库存" data-index="num" />
           <!-- <a-table-column title="售卖状态" data-index="status">
@@ -84,7 +84,7 @@
       @before-ok="confirmModal"
       @before-close="clearModal"
     >
-      <template #title>{{ isEdit ? '修改植物' : '新增植物' }} </template>
+      <template #title>{{ isEdit ? '修改农产' : '新增农产' }} </template>
       <div>
         <a-form
           ref="formRef"
@@ -92,11 +92,11 @@
           :rules="formRules"
           autocomplete="off"
         >
-          <a-form-item field="name" label="植物名称">
-            <a-input v-model="formModel.name" placeholder="请输入植物名称" />
+          <a-form-item field="name" label="农产名称">
+            <a-input v-model="formModel.name" placeholder="请输入农产名称" />
           </a-form-item>
-          <a-form-item field="type" label="植物分类">
-            <a-select v-model="formModel.type" placeholder="请选择植物分类">
+          <a-form-item field="type" label="农产分类">
+            <a-select v-model="formModel.type" placeholder="请选择农产分类">
               <a-optgroup
                 v-for="option in options"
                 :key="option.id"
@@ -111,10 +111,10 @@
               </a-optgroup>
             </a-select>
           </a-form-item>
-          <a-form-item field="price" label="植物价格">
+          <a-form-item field="price" label="农产价格">
             <a-input-number
               v-model="formModel.price"
-              placeholder="请输入植物价格"
+              placeholder="请输入农产价格"
               :min="1"
             />
           </a-form-item>
@@ -146,7 +146,7 @@
             </a-radio-group>
           </a-form-item>
 
-          <a-form-item field="url" label="植物插图">
+          <a-form-item field="url" label="农产插图">
             <a-upload
               :file-list="file ? [file] : []"
               :show-file-list="false"
@@ -231,9 +231,9 @@ const newRenderData = ref([])
 const options = ref()
 
 const formRules = reactive({
-  name: [{ required: true, message: '请输入植物名称' }],
-  type: [{ required: true, message: '请输入植物分类' }],
-  price: [{ required: true, message: '请输入植物价格' }],
+  name: [{ required: true, message: '请输入农产名称' }],
+  type: [{ required: true, message: '请输入农产分类' }],
+  price: [{ required: true, message: '请输入农产价格' }],
   address: [{ required: true, message: '请输入种植地点' }],
   num: [{ required: true, message: '请输入当前库存' }],
   status: [{ required: true, message: '请选择售卖状态' }],
@@ -294,14 +294,14 @@ const submitForm = () => {
         address: formModel.value.address.join('-'),
         updateTime: Date.now(),
       })
-      handleCode(success, ['修改植物成功', '修改植物失败'], () => reload())
+      handleCode(success, ['修改农产成功', '修改农产失败'], () => reload())
     } else {
       const { success } = await addPlant({
         ...formModel.value,
         address: formModel.value.address.join('-'),
         status: 0,
       })
-      handleCode(success, ['添加植物成功', '添加植物失败'], () => reload())
+      handleCode(success, ['添加农产成功', '添加农产失败'], () => reload())
     }
   })
 }

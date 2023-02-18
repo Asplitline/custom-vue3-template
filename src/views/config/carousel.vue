@@ -32,9 +32,9 @@
           <a-table-column title="描述" data-index="description" :width="400" />
           <a-table-column title="状态" data-index="status">
             <template #cell="{ record }">
-              <a-tag :color="record.status !== '1' ? 'green' : 'red'">
-                {{ record.status !== '1' ? '有效' : '失效' }}
-              </a-tag>
+              <a-tag :color="findToggleInfo(record.status, 'color')">{{
+                findToggleInfo(record.status, 'text')
+              }}</a-tag>
             </template>
           </a-table-column>
           <a-table-column title="创建时间" data-index="ctime">
@@ -79,6 +79,16 @@
               v-model="formModel.description"
               placeholder="请输入轮播图描述"
             />
+          </a-form-item>
+          <a-form-item field="status" label="是否显示">
+            <a-switch
+              v-model="formModel.status"
+              checked-value="1"
+              unchecked-value="0"
+            >
+              <template #checked> ON </template>
+              <template #unchecked> OFF </template>
+            </a-switch>
           </a-form-item>
           <a-form-item field="img" label="轮播图">
             <a-upload
@@ -155,7 +165,9 @@ import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
 import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive, ref } from 'vue'
+import useStatic from '@/hooks/useStatic'
 
+const { findToggleInfo } = useStatic()
 const { formRef, formModel, resetForm } = useForm()
 const {
   isEdit,
@@ -181,6 +193,7 @@ const formRules = reactive({
 
 const showModal = (row?: any) => {
   _showModal(formModel, () => {
+    console.log('formModel: ', formModel)
     if (row) {
       isEdit.value = true
       file.value = { url: row.url }
@@ -195,7 +208,10 @@ const cancelModal = () =>
     file.value = null
   })
 
-const clearModal = () => _cancelModal(resetForm)
+const clearModal = () => {
+  file.value = null
+  _cancelModal(resetForm)
+}
 
 const reload = () => {
   cancelModal()

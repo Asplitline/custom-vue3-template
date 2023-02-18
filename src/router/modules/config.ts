@@ -23,7 +23,7 @@ export default {
       name: 'config-category',
       component: () => import('@/views/config/category.vue'),
       meta: {
-        locale: '植物分类',
+        locale: '农产分类',
         requiresAuth: true,
         roles: ['*'],
       },

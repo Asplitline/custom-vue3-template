@@ -112,7 +112,7 @@ const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
   useTable(getAdviceList, deleteAdviceById)
 
 const formRules = reactive({
-  name: [{ required: true, message: '请输入植物名称' }],
+  name: [{ required: true, message: '请输入农产名称' }],
 })
 
 const showModal = (row?: any) => {
@@ -143,14 +143,14 @@ const submitForm = () => {
     //     address: formModel.value.address.join('-'),
     //     updateTime: Date.now(),
     //   })
-    //   handleCode(success, ['修改植物成功', '修改植物失败'], () => reload())
+    //   handleCode(success, ['修改农产成功', '修改农产失败'], () => reload())
     // } else {
     //   const { success } = await addAdvice({
     //     ...formModel.value,
     //     address: formModel.value.address.join('-'),
     //     status: 0,
     //   })
-    //   handleCode(success, ['添加植物成功', '添加植物失败'], () => reload())
+    //   handleCode(success, ['添加农产成功', '添加农产失败'], () => reload())
     // }
   })
 }

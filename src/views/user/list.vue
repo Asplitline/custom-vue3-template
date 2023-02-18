@@ -40,16 +40,11 @@
           <a-table-column title="昵称" data-index="name" />
           <a-table-column title="身份" data-index="level">
             <template #cell="{ record }">
-              <a-tag v-if="record.level == 1" color="red">管理员 </a-tag>
-              <a-tag v-else color="blue">小程序用户</a-tag>
+              <a-tag :color="findLevelInfo(record.level, 'color')">{{
+                findLevelInfo(record.level, 'text')
+              }}</a-tag>
             </template>
           </a-table-column>
-          <!-- <a-table-column title="状态" data-index="state">
-            <template #cell="{ record }">
-              <a-tag v-if="record.state == 1" color="red">异常 </a-tag>
-              <a-tag v-else color="green">正常</a-tag>
-            </template>
-          </a-table-column> -->
           <a-table-column title="创建时间" data-index="ctime">
             <template #cell="{ record }"> {{ format(record.ctime) }} </template>
           </a-table-column>
@@ -116,8 +111,12 @@
           </a-form-item>
           <a-form-item field="level" label="身份">
             <a-radio-group v-model="formModel.level" :default-value="false">
-              <a-radio value="0">小程序用户</a-radio>
-              <a-radio value="1">管理员</a-radio>
+              <a-radio
+                v-for="radio in userLevelInfo"
+                :key="radio.level"
+                :value="String(radio.level)"
+                >{{ radio.text }}</a-radio
+              >
             </a-radio-group>
           </a-form-item>
           <!-- <a-form-item field="state" label="状态">
@@ -129,9 +128,9 @@
           <a-form-item field="email" label="邮箱">
             <a-input v-model="formModel.email" placeholder="请输入邮箱" />
           </a-form-item>
-          <a-form-item field="qq" label="QQ">
+          <!-- <a-form-item field="qq" label="QQ">
             <a-input v-model="formModel.qq" placeholder="请输入QQ" />
-          </a-form-item>
+          </a-form-item> -->
           <a-form-item field="phone" label="手机号码">
             <a-input v-model="formModel.phone" placeholder="请输入手机号码" />
           </a-form-item>
@@ -197,12 +196,16 @@ import { deleteUserById, getUserList, updateUser, addUser } from '@/api/user'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
+import useStatic from '@/hooks/useStatic'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
 import { deepClone } from '@/utils/tools'
 import { inject, onMounted, reactive } from 'vue'
+import { userLevelInfo } from '@/utils/static'
 
+const { findLevelInfo } = useStatic()
 const format = inject('formateDate')
+
 const handleCode = inject('handleCode')
 const expandable = reactive({
   title: '#',

@@ -23,12 +23,12 @@
         @page-change="onPageChange"
       >
         <template #columns>
-          <a-table-column title="图标" data-index="icon">
+          <a-table-column title="农产插图" data-index="icon">
             <template #cell="{ record }">
               <cs-image width="60" height="60" :src="record.icon"></cs-image>
             </template>
           </a-table-column>
-          <a-table-column title="标题" data-index="name" />
+          <a-table-column title="农产类型" data-index="name" />
           <a-table-column title="描述" data-index="description" :width="400" />
           <a-table-column title="创建时间" data-index="createTime">
             <template #cell="{ record }">
@@ -84,13 +84,13 @@
               >
             </a-select>
           </a-form-item>
-          <a-form-item field="name" label="标题">
-            <a-input v-model="formModel.name" placeholder="请输入分类标题" />
+          <a-form-item field="name" label="类型名称">
+            <a-input v-model="formModel.name" placeholder="请输入类型名称" />
           </a-form-item>
-          <a-form-item field="description" label="描述">
+          <a-form-item field="description" label="类型描述">
             <a-input
               v-model="formModel.description"
-              placeholder="请输入分类描述"
+              placeholder="请输入类型描述"
             />
           </a-form-item>
           <a-form-item field="icon" label="分类">
@@ -238,7 +238,6 @@ const parents = computed(() => {
 })
 
 const filterTableData = computed(() => {
-  console.log(parents.value)
   if (parents.value.length === 0) return []
   const result = parents.value.map((i) => {
     const children = renderData.value.filter((j) => j.pid === i.id)
@@ -249,8 +248,6 @@ const filterTableData = computed(() => {
   })
   return result
 })
-
-console.log(filterTableData)
 
 const submitForm = () => {
   formRef.value.validate(async (err) => {
