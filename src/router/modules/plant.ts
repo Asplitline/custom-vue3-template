@@ -3,7 +3,7 @@ export default {
   name: 'plant',
   component: () => import('@/views/plant/index.vue'),
   meta: {
-    locale: '种植 & 科普',
+    locale: '科普 & 农作物',
     requiresAuth: true,
     icon: 'icon-exclamation-circle',
   },
@@ -35,7 +35,17 @@ export default {
       name: 'plant-list',
       component: () => import('@/views/plant/list.vue'),
       meta: {
-        locale: '种植清单',
+        locale: '农作物清单',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: 'feedback',
+      name: 'plant-feedback',
+      component: () => import('@/views/plant/feedback.vue'),
+      meta: {
+        locale: '农作物反馈',
         requiresAuth: true,
         roles: ['*'],
       },

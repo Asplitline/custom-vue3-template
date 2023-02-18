@@ -1,17 +1,15 @@
-import {
-  createRouter,
-  createWebHashHistory,
-  LocationQueryRaw,
-} from 'vue-router'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'
+import {
+  LocationQueryRaw,
+  createRouter,
+  createWebHashHistory,
+} from 'vue-router'
 
-import usePermission from '@/hooks/permission'
-import { useUserStore } from '@/store'
 import PageLayout from '@/layout/page-layout.vue'
-import { Cache } from '@/utils/tools'
-import Login from './modules/login'
+import { useUserStore } from '@/store'
 import appRoutes from './modules'
+import Login from './modules/login'
 
 // const endAppRoutes = appRoutes.filter((i) => {
 //   return i.meta.hidden !== true

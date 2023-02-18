@@ -39,11 +39,11 @@ export default function useTable(
   const fetchData = async (callback?: () => void) => {
     try {
       setLoading(true)
-      const { list, total, pageSize, pageNum } = await fetchApi?.(
+      const { list, data, total, pageSize, pageNum } = await fetchApi?.(
         searchModel.value
       )
       Object.assign(pagination.value, { total, current: pageNum, pageSize })
-      renderData.value = list
+      renderData.value = list || data
       callback?.()
     } catch (error) {
       //

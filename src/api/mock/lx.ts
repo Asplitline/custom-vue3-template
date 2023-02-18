@@ -34,7 +34,7 @@ const api = (data) => {
     credentials: 'include',
   })
 }
-
+// https://ncpscxx.moa.gov.cn/product-web/#/
 res.forEach((item) => {
   api(item)
 })

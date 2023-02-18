@@ -9,9 +9,9 @@
       class="ups-form"
     >
       <a-row :gutter="60">
-        <a-col :span="8">
+        <a-col :span="24">
           <a-card>
-            <a-form-item field="url" label="科普封面">
+            <!-- <a-form-item field="url" label="科普封面">
               <a-upload
                 :file-list="file ? [file] : []"
                 :show-file-list="false"
@@ -48,14 +48,14 @@
                   </div>
                 </template>
               </a-upload>
-            </a-form-item>
+            </a-form-item> -->
             <a-form-item field="title" label="标题">
               <a-input
                 v-model="formModel.title"
                 placeholder="请输入标题"
               ></a-input>
             </a-form-item>
-            <a-form-item field="lx" label="分类">
+            <!-- <a-form-item field="lx" label="分类">
               <a-select v-model="formModel.lx" placeholder="请选择分类">
                 <a-optgroup
                   v-for="option in options"
@@ -70,13 +70,13 @@
                   >
                 </a-optgroup>
               </a-select>
-            </a-form-item>
-            <a-alert
+            </a-form-item> -->
+            <!-- <a-alert
               >图片仅支持 gif / png / jpg , 大小不超过 1MB (1024KB)</a-alert
-            >
+            > -->
           </a-card></a-col
         >
-        <a-col :span="16">
+        <a-col :span="24">
           <a-card>
             <a-form-item field="title" label="内容" :content-flex="false">
               <QuillEditor
@@ -98,26 +98,18 @@
 </template>
 
 <script lang="ts" setup>
+import { addContent, updateContent } from '@/api/content'
 import useForm from '@/hooks/useForm'
-import useUpload from '@/hooks/useUpload'
-import { computed, inject, reactive, ref, onMounted } from 'vue'
+import { useCacheStore, useUserStore } from '@/store'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import { getAllCategory } from '@/api/category'
+import { computed, inject, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { addContent, updateContent } from '@/api/content'
-import { useCacheStore } from '@/store'
-import { deepClone } from '@/utils/tools'
 
 const { formRef, formModel, resetForm } = useForm()
 const cacheStore = useCacheStore()
 const handleCode = inject('handleCode')
 const editor = ref()
-const options = ref()
-const { customRequest, file, onChange, onProgress } = useUpload(
-  formModel,
-  'url'
-)
 
 const route = useRoute()
 const router = useRouter()
@@ -128,64 +120,56 @@ const isEdit = computed(() => {
 
 const formRules = reactive({
   title: [{ required: true, message: '请输入科普标题' }],
-  lx: [{ required: true, message: '请选择科普分类' }],
-  url: [{ required: true, message: '请选择科普封面' }],
   content: [{ required: true, message: '请输入科普内容' }],
 })
-const fetchData = async () => {
-  const { data } = await getAllCategory()
-  const parents = data.filter((i) => !i.pid)
-  options.value = parents
-    .map((i) => {
-      const children = data.filter((j) => i.id === j.pid)
 
-      return {
-        ...i,
-        children,
-      }
-    })
-    .filter((i) => i.children?.length > 0)
-}
 const back = () => {
   router.go(-1)
 }
+
+const userStore = useUserStore()
 const submitForm = () => {
   formRef.value.validate(async (err) => {
     if (err) return
-    const { content, ...formData } = formModel.value
     if (isEdit.value) {
       const { success } = await updateContent({
-        ...formData,
-        content: editor.value.getHTML(),
+        ...formModel.value,
+        htmlContent: editor.value.getHTML(),
+        textContent: editor.value.getText(),
+        updateTime: Date.now(),
       })
-      handleCode(success, ['修改轮播图成功', '修改轮播图失败'], () => back())
+      handleCode(success, ['修改科普文章成功', '修改科普文章失败'], () =>
+        back()
+      )
     } else {
       const { success } = await addContent({
-        ...formData,
-        content: editor.value.getHTML(),
+        id: 1,
+        authorId: 1 || userStore.info.id,
+        title: formModel.value.title,
+        createTime: Date.now(),
+        htmlContent: editor.value.getHTML(),
+        textContent: editor.value.getText(),
       })
-      handleCode(success, ['添加轮播图成功', '添加轮播图失败'], () => back())
+      handleCode(success, ['添加科普文章成功', '添加科普文章失败'], () =>
+        back()
+      )
     }
   })
 }
 
 onMounted(() => {
   if (isEdit.value) {
-    const { id, content, title, lx, url } = cacheStore.popularScience
-    editor.value.setHTML(content)
-    file.value = { url }
+    const { id, textContent, htmlContent, title, lx, url } =
+      cacheStore.popularScience
+    editor.value.setHTML(htmlContent)
     formModel.value = {
       id,
-      content,
+      textContent,
       title,
-      lx,
-      url,
+      htmlContent,
     }
   }
   console.log('formModel.value: ', formModel.value)
-
-  //
-  fetchData()
 })
 </script>
 
