@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+// note cs-image
 import { computed, defineProps } from 'vue'
 
 const props = defineProps({

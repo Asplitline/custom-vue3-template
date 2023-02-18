@@ -39,44 +39,23 @@
 
       <li>
         <a-dropdown trigger="click">
-          <a-avatar :size="32" :style="{ marginRight: '8px' }">
-            <img alt="avatar" :src="avatar" />
+          <a-avatar
+            :size="32"
+            :style="{ marginRight: '8px', backgroundColor: '#14a9f8' }"
+          >
+            {{ userStore.info.username }}
           </a-avatar>
           <template #content>
-            <!-- <a-doption>
-              <a-space @click="switchGit">
-                <icon-github />
-                <span> 开源地址 </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
-              <a-space @click="switchRoles">
-                <icon-tag />
-                <span>
-                  {{ $t('messageBox.switchRoles') }}
-                </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
-              <a-space @click="$router.push({ name: 'info' })">
-                <icon-user />
-                <span>
-                  {{ $t('messageBox.userCenter') }}
-                </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
-              <a-space @click="$router.push({ name: 'setting' })">
-                <icon-settings />
-                <span>
-                  {{ $t('messageBox.userSettings') }}
-                </span>
-              </a-space>
-            </a-doption> -->
             <a-doption>
               <a-space @click="handleLogout">
                 <icon-export />
                 <span> 退出登录 </span>
+              </a-space>
+            </a-doption>
+            <a-doption>
+              <a-space @click="handleLogout">
+                <icon-export />
+                <span> 前往首页 </span>
               </a-space>
             </a-doption>
           </template>
@@ -87,19 +66,16 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, computed, ref } from 'vue'
-import { Message } from '@arco-design/web-vue'
-import { useDark, useToggle } from '@vueuse/core'
-import { useAppStore, useUserStore } from '@/store'
-import { LOCALE_OPTIONS } from '@/locale'
 import useLocale from '@/hooks/locale'
 import useUser from '@/hooks/user'
+import { useAppStore, useUserStore } from '@/store'
+import { useDark, useToggle } from '@vueuse/core'
+import { computed, ref } from 'vue'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
 const { logout } = useUser()
 const { changeLocale } = useLocale()
-const locales = [...LOCALE_OPTIONS]
 const avatar = computed(() => {
   return `${import.meta.env.VITE_API_IMG_URL}/${userStore.info.url}`
 })
@@ -118,36 +94,12 @@ const isDark = useDark({
   },
 })
 const toggleTheme = useToggle(isDark)
-const setVisible = () => {
-  appStore.updateSettings({ globalSettings: true })
+const test = () => {
+  console.log('111 :', 111)
 }
-const refBtn = ref()
-const triggerBtn = ref()
-const setPopoverVisible = () => {
-  const event = new MouseEvent('click', {
-    view: window,
-    bubbles: true,
-    cancelable: true,
-  })
-  refBtn.value.dispatchEvent(event)
-}
+console.log('userStore: ', userStore)
 const handleLogout = () => {
   logout()
-}
-const setDropDownVisible = () => {
-  const event = new MouseEvent('click', {
-    view: window,
-    bubbles: true,
-    cancelable: true,
-  })
-  triggerBtn.value.dispatchEvent(event)
-}
-const switchRoles = async () => {
-  const res = await userStore.switchRoles()
-  Message.success(res as string)
-}
-const switchGit = () => {
-  window.open('https://github.com/chuzhixin')
 }
 </script>
 
