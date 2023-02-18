@@ -47,13 +47,22 @@ watch(
   }
 )
 
-onMounted(() => {
-  if (props.modelValue) {
-    console.log('props.modelValue: ', props.modelValue)
-    const [leftVal, rightVal] = props.modelValue?.split(',')
+const initData = (value) => {
+  if (value) {
+    const [leftVal, rightVal] = value?.split(',')
     leftValue.value = +leftVal
     rightValue.value = +rightVal
   }
+}
+watch(
+  () => props.modelValue,
+  (cur) => {
+    initData(cur)
+  }
+)
+
+onMounted(() => {
+  initData(props.modelValue)
 })
 </script>
 

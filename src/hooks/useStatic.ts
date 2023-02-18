@@ -1,4 +1,4 @@
-import { toggleInfo, userLevelInfo } from '@/utils/static'
+import { productStatus, toggleInfo, userLevelInfo } from '@/utils/static'
 
 export enum Unit {
   temperature = '℃',
@@ -7,6 +7,7 @@ export enum Unit {
   sunshineTime = 'μmol/m²/s',
 }
 
+// note useStatic
 export default function useStatic() {
   const findLevelInfo = (level: number, key?: string) => {
     const value = userLevelInfo.find((i) => i.level === +level)
@@ -14,6 +15,10 @@ export default function useStatic() {
   }
   const findToggleInfo = (value: number, key?: string) => {
     const res = toggleInfo.find((i) => i.value === +value)
+    return key ? res?.[key] : res
+  }
+  const findProductStatus = (value: number, key?: string) => {
+    const res = productStatus.find((i) => i.value === +value)
     return key ? res?.[key] : res
   }
 
@@ -33,6 +38,7 @@ export default function useStatic() {
   return {
     findLevelInfo,
     findToggleInfo,
+    findProductStatus,
     parseValue,
     formatValue,
   }

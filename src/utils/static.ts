@@ -8,4 +8,11 @@ export const toggleInfo = [
   { text: '禁用', value: 0, color: 'red' },
 ]
 
+export const productStatus = [
+  { text: '刚播种', value: 0, color: '#aaa' },
+  { text: '发芽', value: 1, color: 'green' },
+  { text: '开花', value: 2, color: 'pink' },
+  { text: '结果', value: 3, color: 'red' },
+]
+
 export default null

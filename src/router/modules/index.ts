@@ -3,7 +3,7 @@
 import Exception from './exception'
 import User from './user'
 import Config from './config'
-import Plant from './plant'
+import Crops from './crops'
 import Other from './other'
 /** simple end */
 
@@ -12,7 +12,7 @@ export default [
   Exception,
   Config,
   User,
-  Plant,
+  Crops,
   Other,
   /** simple end */
 ]

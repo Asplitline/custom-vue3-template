@@ -1,7 +1,7 @@
 export default {
-  path: 'plant',
-  name: 'plant',
-  component: () => import('@/views/plant/index.vue'),
+  path: 'crops',
+  name: 'crops',
+  component: () => import('@/views/crops/index.vue'),
   meta: {
     locale: '科普 & 农作物',
     requiresAuth: true,
@@ -10,8 +10,8 @@ export default {
   children: [
     {
       path: 'popular-science',
-      name: 'plant-popular-science',
-      component: () => import('@/views/plant/popularScience.vue'),
+      name: 'crops-popular-science',
+      component: () => import('@/views/crops/popularScience.vue'),
       meta: {
         locale: '科普列表',
         requiresAuth: true,
@@ -21,7 +21,7 @@ export default {
     {
       path: 'up-popular-science/:id?',
       name: 'up-popular-science',
-      component: () => import('@/views/plant/updatePopularScience.vue'),
+      component: () => import('@/views/crops/updatePopularScience.vue'),
       props: true,
       meta: {
         locale: '科普操作',
@@ -32,8 +32,8 @@ export default {
     },
     {
       path: 'list',
-      name: 'plant-list',
-      component: () => import('@/views/plant/list.vue'),
+      name: 'crops-list',
+      component: () => import('@/views/crops/list.vue'),
       meta: {
         locale: '农作物清单',
         requiresAuth: true,
@@ -42,8 +42,8 @@ export default {
     },
     {
       path: 'feedback',
-      name: 'plant-feedback',
-      component: () => import('@/views/plant/feedback.vue'),
+      name: 'crops-feedback',
+      component: () => import('@/views/crops/feedback.vue'),
       meta: {
         locale: '农作物反馈',
         requiresAuth: true,

@@ -37,16 +37,36 @@
               <a-tag v-else color="gray"> 未知分类 </a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="农产价格" data-index="price" />
-          <a-table-column title="种植地点" data-index="address" />
-          <a-table-column title="当前库存" data-index="num" />
-          <!-- <a-table-column title="售卖状态" data-index="status">
+          <a-table-column title="作物名称" data-index="name" />
+          <a-table-column title="温度" data-index="temperature">
             <template #cell="{ record }">
-              <a-tag v-if="record.status == 0" color="gray">未上架 </a-tag>
-              <a-tag v-else-if="record.status == 1" color="blue"> 已上架</a-tag>
-              <a-tag v-else color="red"> 已售罄</a-tag>
+              {{ formatValue(record.temperature, Unit.temperature) }}
             </template>
-          </a-table-column> -->
+          </a-table-column>
+          <a-table-column title="湿度" data-index="humidity">
+            <template #cell="{ record }">
+              {{ formatValue(record.humidity, Unit.humidity) }}
+            </template>
+          </a-table-column>
+
+          <a-table-column title="二氧化碳浓度" data-index="carbonDioxide">
+            <template #cell="{ record }">
+              {{ formatValue(record.carbonDioxide, Unit.carbonDioxide) }}
+            </template>
+          </a-table-column>
+          <a-table-column title="日照时间" data-index="sunshineTime">
+            <template #cell="{ record }">
+              {{ formatValue(record.sunshineTime, Unit.sunshineTime) }}
+            </template>
+          </a-table-column>
+
+          <a-table-column title="售卖状态" data-index="status">
+            <template #cell="{ record }">
+              <a-tag :color="findProductStatus(record.status, 'color')">{{
+                findProductStatus(record.status, 'text')
+              }}</a-tag>
+            </template>
+          </a-table-column>
 
           <a-table-column title="创建时间" data-index="createTime">
             <template #cell="{ record }">
@@ -81,6 +101,7 @@
     <a-modal
       :key="isEdit ? 'edit' : 'add'"
       v-model:visible="modalVisible"
+      unmount-on-close
       @before-ok="confirmModal"
       @before-close="clearModal"
     >
@@ -111,41 +132,56 @@
               </a-optgroup>
             </a-select>
           </a-form-item>
-          <a-form-item field="price" label="农产价格">
-            <a-input-number
-              v-model="formModel.price"
-              placeholder="请输入农产价格"
-              :min="1"
-            />
-          </a-form-item>
-          <a-form-item field="address" label="种植地点">
-            <a-select
-              v-model="formModel.address"
-              placeholder="请选择种植地点"
-              multiple
-            >
-              <a-option>窗台</a-option>
-              <a-option>楼顶</a-option>
-              <a-option>庭院</a-option>
-              <a-option>花园</a-option>
+          <a-form-item field="status" label="生长阶段">
+            <a-select v-model="formModel.status" placeholder="请选择生长阶段">
+              <a-option
+                v-for="option in productStatus"
+                :key="option.value"
+                :value="option.value"
+                :label="option.text"
+              ></a-option>
             </a-select>
           </a-form-item>
-          <a-form-item field="num" label="当前库存">
-            <a-input-number
-              v-model="formModel.num"
-              placeholder="请输入当前库存"
-              :min="1"
+          <a-form-item>
+            <a-select v-model="readId" placeholder="作物参数模板（可选）">
+              <a-option
+                v-for="config in configList"
+                :key="config.id"
+                :value="config.id"
+                :label="config.name"
+              ></a-option>
+            </a-select>
+
+            <a-button type="primary" class="read-btn" @click="readConfig"
+              >读取模板</a-button
+            >
+          </a-form-item>
+          <a-form-item field="temperature" label="温度">
+            <double-input-number
+              v-model="formModel.temperature"
+            ></double-input-number>
+          </a-form-item>
+          <a-form-item field="humidity" label="湿度">
+            <double-input-number
+              v-model="formModel.humidity"
+            ></double-input-number>
+          </a-form-item>
+          <a-form-item field="carbonDioxide" label="二氧化碳浓度">
+            <double-input-number v-model="formModel.carbonDioxide" />
+          </a-form-item>
+          <a-form-item field="sunshineTime" label="日照时间">
+            <double-input-number v-model="formModel.sunshineTime" />
+          </a-form-item>
+          <a-form-item field="address" label="产物地址">
+            <a-input v-model="formModel.address" placeholder="请输入产物地址" />
+          </a-form-item>
+
+          <a-form-item field="description" label="农产描述">
+            <a-textarea
+              v-model="formModel.description"
+              placeholder="请输入农产描述"
             />
           </a-form-item>
-
-          <a-form-item v-if="isEdit" field="status" label="售卖状态">
-            <a-radio-group v-model="formModel.status" :default-value="false">
-              <a-radio :value="0">未上架</a-radio>
-              <a-radio :value="1">已上架</a-radio>
-              <a-radio :value="2">已售罄</a-radio>
-            </a-radio-group>
-          </a-form-item>
-
           <a-form-item field="url" label="农产插图">
             <a-upload
               :file-list="file ? [file] : []"
@@ -198,18 +234,23 @@
 <script lang="ts" setup>
 import { getAllCategory } from '@/api/category'
 import {
-  addPlant,
-  deletePlantById,
-  getPlantList,
-  updatePlant,
-} from '@/api/plant'
+  addCrops,
+  deleteCropsById,
+  getCropsList,
+  updateCrops,
+} from '@/api/crops'
+import { getAllConfig } from '@/api/other'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
+import DoubleInputNumber from '@/components/double-input-number/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
+import useStatic, { Unit } from '@/hooks/useStatic'
 import useTable from '@/hooks/useTable'
 import useUpload from '@/hooks/useUpload'
+import { productStatus } from '@/utils/static'
 import { deepClone } from '@/utils/tools'
-import { inject, onMounted, reactive, ref, watch } from 'vue'
+import { Message } from '@arco-design/web-vue'
+import { inject, onMounted, reactive, ref } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
 const {
@@ -226,20 +267,17 @@ const { customRequest, file, onChange, onProgress } = useUpload(
   'url'
 )
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getPlantList, deletePlantById)
-const newRenderData = ref([])
+  useTable(getCropsList, deleteCropsById)
 const options = ref()
-
+const newRenderData = ref([])
 const formRules = reactive({
   name: [{ required: true, message: '请输入农产名称' }],
-  type: [{ required: true, message: '请输入农产分类' }],
-  price: [{ required: true, message: '请输入农产价格' }],
-  address: [{ required: true, message: '请输入种植地点' }],
-  num: [{ required: true, message: '请输入当前库存' }],
-  status: [{ required: true, message: '请选择售卖状态' }],
-  url: [{ required: true, message: '请选择用户头像' }],
+  type: [{ required: true, message: '请选择农产分类' }],
+  status: [{ required: true, message: '请选择生长阶段' }],
+  // description: [{ required: true, message: '农产插图' }],
+  url: [{ required: true, message: '请选择产物插图' }],
 })
-
+const { formatValue, findProductStatus } = useStatic()
 const fetchCategory = async () => {
   const { data } = await getAllCategory()
   const parents = data.filter((i) => !i.pid)
@@ -252,6 +290,7 @@ const fetchCategory = async () => {
       }
     })
     .filter((i) => i.children?.length > 0)
+
   newRenderData.value = renderData.value.map((i) => {
     const category = data.find((j) => j.id === i.type)
     return {
@@ -259,15 +298,39 @@ const fetchCategory = async () => {
       category,
     }
   })
-  console.log('newRenderData.value :', newRenderData.value)
+}
+const configList = ref([])
+const readId = ref('')
+const readConfig = () => {
+  if (!readId.value) return Message.error('无法读取空配置')
+  const config = configList.value.find((i) => i.id === readId.value)
+  formModel.value = {
+    ...formModel.value,
+    temperature: config.temperature,
+    humidity: config.humidity,
+    carbonDioxide: config.carbonDioxide,
+    sunshineTime: config.sunshineTime,
+  }
+  return null
 }
 
-const showModal = (row?: any) => {
+const clearModal = () => {
+  readId.value = ''
+  _clearModal()
+}
+const fetchConfig = async () => {
+  const { data } = await getAllConfig()
+  configList.value = data
+}
+const showModal = async (row?: any) => {
+  console.log('renderData.value :', renderData.value)
+  await fetchConfig()
+
   _showModal(formModel, () => {
     if (row) {
       isEdit.value = true
       file.value = { url: row.url }
-      formModel.value = deepClone({ ...row, address: row.address.split('-') })
+      formModel.value = deepClone(row)
     } else {
       isEdit.value = false
       formModel.value = {}
@@ -289,27 +352,25 @@ const submitForm = () => {
   formRef.value.validate(async (err) => {
     if (err) return
     if (isEdit.value) {
-      const { success } = await updatePlant({
+      const { success } = await updateCrops({
         ...formModel.value,
-        address: formModel.value.address.join('-'),
         updateTime: Date.now(),
       })
       handleCode(success, ['修改农产成功', '修改农产失败'], () => reload())
     } else {
-      const { success } = await addPlant({
+      const { success } = await addCrops({
         ...formModel.value,
-        address: formModel.value.address.join('-'),
-        status: 0,
       })
       handleCode(success, ['添加农产成功', '添加农产失败'], () => reload())
     }
   })
 }
 // watch(renderData, (pre, cur) => {
-//   console.log('pre :', pre)
-//   console.log('cur :', cur)
+//
+//
 // })
 const confirmModal = () => submitForm()
+
 onMounted(async () => {
   await fetchData()
   fetchCategory()
@@ -319,5 +380,8 @@ onMounted(async () => {
 <style lang="less" scoped>
 .desc {
   padding-left: 60px;
+}
+.read-btn {
+  margin-left: 20px;
 }
 </style>

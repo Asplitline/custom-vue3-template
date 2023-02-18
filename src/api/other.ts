@@ -9,6 +9,10 @@ export function deleteLogById(params: QueryDeleteParams) {
   return service.delete('/log/deletelog', { params })
 }
 
+export function getAllConfig() {
+  return service.get<QueryParams>('/apiConfig/list')
+}
+
 export function getConfigList(params: QueryParams) {
   return service.get<QueryParams>('/apiConfig/pageList', { params })
 }
