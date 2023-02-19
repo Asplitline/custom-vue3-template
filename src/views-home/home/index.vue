@@ -33,6 +33,7 @@
               v-for="(category, index) in categoryList"
               :key="index"
               class="category-item"
+              @click="gotoCategory(category)"
             >
               <img :src="bindImg(category.icon)" alt="" class="category-icon" />
               <span>{{ category.name }}</span>
@@ -123,6 +124,7 @@ import useStatic, { Unit } from '@/hooks/useStatic'
 import { useCacheStore } from '@/store'
 import { getContentList } from '@/api/content'
 import { getConfigList } from '@/api/other'
+import { useRouter } from 'vue-router'
 
 const carouselList = ref([])
 const { bindImg, formatValue } = useStatic()
@@ -151,7 +153,10 @@ const fetchConfigList = async () => {
   console.log('list: ', list)
   renderData.value = list
 }
-
+const router = useRouter()
+const gotoCategory = (item) => {
+  router.push({ name: 'home-product', query: { id: item.id } })
+}
 onMounted(() => {
   fetchCarousel()
   fetchPostList()

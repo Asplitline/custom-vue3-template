@@ -1,8 +1,13 @@
 <template>
   <div class="card">
     <div class="card-title">
-      <img src="@/assets/images/title-icon.png" class="icon" alt="" />
-      <span>{{ props.title || '-' }}</span>
+      <div class="card-title-left">
+        <img src="@/assets/images/title-icon.png" class="icon" alt="" />
+        <span>{{ props.title || '-' }}</span>
+      </div>
+      <div class="card-title-right">
+        <slot name="right"></slot>
+      </div>
     </div>
 
     <div class="card-content">
@@ -40,6 +45,13 @@ const props = defineProps(['title'])
     }
     .icon {
       height: 36px;
+    }
+    &-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    &-right {
     }
   }
   &-content {
