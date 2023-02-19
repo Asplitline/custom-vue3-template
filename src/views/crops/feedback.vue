@@ -196,7 +196,6 @@ const { formRef, formModel, resetForm } = useForm()
 const { isEdit, modalVisible, showModal, cancelModal, clearModal } = useModal()
 const format = inject('formateDate')
 const handleCode = inject('handleCode')
-const currentStep = ref(0)
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
   useTable(getFeedbackList, deleteFeedbackById)
 const currentStatus = ref({})
@@ -204,7 +203,7 @@ const { formatValue, findHandleStatus, parseValue } = useStatic()
 // const showModal = ()
 
 const currentItem = ref({})
-const judgeNum = (range, newVal) => {
+const judgeNum = (newVal, range) => {
   const { left, right } = parseValue(range)
   if (+newVal >= left && +newVal <= +right) {
     return true
