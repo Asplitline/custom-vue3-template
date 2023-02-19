@@ -26,16 +26,20 @@
       </a-col>
       <a-col :span="8">
         <banner-card title="评论">
-          <ul class="comment-list">
-            <li v-for="i in commentList" :key="i.id" class="comment-item">
-              <span
-                class="author"
-                :class="{ my: i.user.username === userStore.info.username }"
-                >{{ i.user.username }} :
-              </span>
-              <span class="content">{{ i.content }}</span>
-            </li>
-          </ul>
+          <template v-if="commentList.length">
+            <ul class="comment-list">
+              <li v-for="i in commentList" :key="i.id" class="comment-item">
+                <span
+                  class="author"
+                  :class="{ my: i.user.username === userStore.info.username }"
+                  >{{ i.user.username }} :
+                </span>
+                <span class="content">{{ i.content }}</span>
+              </li>
+            </ul>
+          </template>
+          <div v-else> 暂无评论 </div>
+
           <div v-if="userStore.isLogin" class="comment-btn">
             <a-textarea v-model="comment" type="请输入内容"></a-textarea>
             <a-button
@@ -46,6 +50,7 @@
               >评论</a-button
             >
           </div>
+
           <div v-else class="empty" style="margin-top: 10px">
             登陆后才能评论
           </div>
@@ -79,13 +84,18 @@ const fetchPostDetail = async () => {
 const commentList = ref([])
 const fetchCommentList = async () => {
   const { data } = await getAllCommentList()
-  commentList.value = data.map((i) => {
-    const user = userStore.findUser(i.userId) || { username: '已注销' }
-    return {
-      ...i,
-      user,
-    }
-  })
+  console.log('data: ', data)
+  commentList.value = data
+    .filter((i) => i.postId === route.params.id)
+    .map((i) => {
+      const user = userStore.findUser(i.userId) || { username: '已注销' }
+      return {
+        ...i,
+        user,
+      }
+    })
+    .sort((a, b) => new Date(a.createTime) - new Date(b.createTime))
+  console.log('commentList.value :', commentList.value)
 }
 const handleComment = async () => {
   if (!comment.value) {

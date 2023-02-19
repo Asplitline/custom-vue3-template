@@ -54,12 +54,12 @@ const initData = (value) => {
     rightValue.value = +rightVal
   }
 }
-watch(
-  () => props.modelValue,
-  (cur) => {
-    initData(cur)
-  }
-)
+// watch(
+//   () => props.modelValue,
+//   (cur) => {
+//     initData(cur)
+//   }
+// )
 
 onMounted(() => {
   initData(props.modelValue)
