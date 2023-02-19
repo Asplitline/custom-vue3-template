@@ -12,6 +12,11 @@
           >{{ menu.meta.locale }}</li
         >
       </ul>
+      <div v-if="userStore.isAdmin">
+        <a-button type="primary" status="success" @click="gotoAdmin"
+          >管理系统</a-button
+        >
+      </div>
     </div>
     <div class="page">
       <router-view />
@@ -22,10 +27,11 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router'
 import { computed } from 'vue'
+import { useUserStore } from '@/store'
 
 const router = useRouter()
 const route = useRoute()
-console.log('route: ', route)
+const userStore = useUserStore()
 const menuList = computed(() =>
   router.getRoutes().filter((i) => {
     return i.name?.startsWith('home-')
@@ -35,7 +41,9 @@ const gotoNext = (item) => {
   console.log('item: ', item)
   router.push({ name: item.name })
 }
-const routes = useRoute()
+const gotoAdmin = () => {
+  router.push({ name: 'user' })
+}
 </script>
 
 <style lang="less" scoped>
@@ -55,6 +63,7 @@ const routes = useRoute()
 }
 .nav-list {
   display: flex;
+  flex: 1;
   .nav-item {
     display: flex;
     align-items: center;

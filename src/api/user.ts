@@ -35,3 +35,7 @@ export function getUserList(params: QueryParams) {
 export function deleteUserById(params: QueryDeleteParams) {
   return service.delete('/user/deleteUser', { params })
 }
+
+export function modifyPassword(params: any) {
+  return service.get<QueryParams>('/user/changePassword', { params })
+}

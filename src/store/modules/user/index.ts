@@ -15,6 +15,9 @@ const useUserStore = defineStore('user', {
     isLogin: (state) => {
       return !isEmpty(state.token)
     },
+    isAdmin: (state) => {
+      return +state.info.level! === 1
+    },
   },
 
   actions: {
@@ -23,13 +26,22 @@ const useUserStore = defineStore('user', {
       removeAction(this, 'info')
       removeAction(this, 'token')
     },
-
+    updateUser(data: any) {
+      if (!data) {
+        removeAction(this, 'info')
+        removeAction(this, 'token')
+      } else {
+        this.info = data
+        this.token = data.id
+        updateAction(this, 'info', data)
+        updateAction(this, 'token', data.id)
+      }
+    },
     // Login
     async login(loginForm: LoginData) {
       try {
         const res = await userLogin(loginForm)
-        updateAction(this, 'info', res.data)
-        updateAction(this, 'token', res.data.id)
+        this.updateUser(res.data)
       } catch (error) {
         removeAction(this, 'info')
         removeAction(this, 'token')
