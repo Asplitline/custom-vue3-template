@@ -9,6 +9,11 @@ export const toggleInfo = [
   { text: '禁用', value: 0, color: 'red' },
 ]
 
+export const handleStatus = [
+  { text: '未处理', value: 0, color: 'red' },
+  { text: '已处理', value: 1, color: 'green' },
+]
+
 export const productStatus = [
   { text: '刚播种', value: 0, color: '#aaa' },
   { text: '发芽', value: 1, color: 'green' },

@@ -6,45 +6,59 @@
         row-key="id"
         :loading="loading"
         :pagination="pagination"
-        :data="renderData"
+        :data="newRenderData"
         :bordered="false"
         @page-change="onPageChange"
       >
         <template #columns>
-          <a-table-column title="商品名称" data-index="goodsName" />
-          <a-table-column title="成交数量" data-index="num" />
-          <a-table-column title="成交金额" data-index="price">
+          <a-table-column title="农产插图" data-index="url">
             <template #cell="{ record }">
-              <a-tag color="#7bc616"> ￥{{ record.price }} </a-tag>
+              <cs-image width="60" height="60" :src="record.url"></cs-image>
             </template>
           </a-table-column>
-          <a-table-column title="订单状态" data-index="status">
+          <a-table-column title="农产名称" data-index="crops.name" />
+          <a-table-column title="反馈用户" data-index="user.username" />
+          <a-table-column title="温度" data-index="temperature">
             <template #cell="{ record }">
-              <a-tag :color="getCurrentStatus(record.status).color">
-                {{ getCurrentStatus(record.status).label }}</a-tag
+              {{ formatValue(record.temperature, Unit.temperature) }}
+            </template>
+          </a-table-column>
+          <a-table-column title="湿度" data-index="humidity">
+            <template #cell="{ record }">
+              {{ formatValue(record.humidity, Unit.humidity) }}
+            </template>
+          </a-table-column>
+
+          <a-table-column title="二氧化碳浓度" data-index="carbonDioxide">
+            <template #cell="{ record }">
+              {{ formatValue(record.carbonDioxide, Unit.carbonDioxide) }}
+            </template>
+          </a-table-column>
+          <a-table-column title="日照时间" data-index="sunshineTime">
+            <template #cell="{ record }">
+              {{ formatValue(record.sunshineTime, Unit.sunshineTime) }}
+            </template>
+          </a-table-column>
+
+          <a-table-column title="处理状态" data-index="state">
+            <template #cell="{ record }">
+              <a-tag :color="findHandleStatus(+record.state, 'color')">
+                {{ findHandleStatus(+record.state, 'text') }}</a-tag
               >
             </template>
           </a-table-column>
 
-          <a-table-column title="创建时间" data-index="createTime">
-            <template #cell="{ record }">
-              {{ format(record.createTime) }}
-            </template>
+          <a-table-column title="创建时间" data-index="ctime">
+            <template #cell="{ record }"> {{ format(record.ctime) }} </template>
           </a-table-column>
-          <a-table-column title="更新时间" data-index="updateTime">
-            <template #cell="{ record }">
-              {{ format(record.updateTime) }}
-            </template>
-          </a-table-column>
-
           <a-table-column title="操作" data-index="operations">
             <template #cell="{ record }">
               <a-button type="text" size="small" @click="newShowModal(record)">
-                订单管理
+                处理
               </a-button>
               <a-popconfirm
-                :content="`是否确定要删除: ${record.goodsName}`"
-                @ok="deleteData(record.id)"
+                :content="`是否确定要删除: ${record.user.username}的反馈`"
+                @ok="deleteData(record.id, newFetchData)"
               >
                 <a-button type="text" status="danger" size="small">
                   删除
@@ -58,24 +72,106 @@
 
     <a-modal
       v-model:visible="modalVisible"
+      :width="800"
       @before-ok="confirmModal"
       @before-close="clearModal"
     >
-      <template #title> 订单处理 </template>
+      <template #title> 反馈 </template>
+      <ul v-if="modalVisible" class="feedback-list">
+        <li class="feedback-item header">
+          <span class="name">名称</span>
+          <span class="old">标准</span>
+          <span class="new">当前</span>
+          <span class="res">状态</span>
+        </li>
+        <li class="feedback-item">
+          <span class="name">温度</span>
+          <span class="old">
+            {{
+              formatValue(currentItem?.crops.temperature, Unit.temperature)
+            }}</span
+          >
+          <span class="new">
+            {{ formatValue(currentItem.temperature, Unit.temperature) }}</span
+          >
+          <span class="res">
+            <icon-check-circle
+              v-if="judgeList?.temperature"
+              style="color: #00b42a; font-size: 28px"
+            />
+            <icon-close-circle v-else style="color: red; font-size: 28px" />
+          </span>
+        </li>
+        <li class="feedback-item">
+          <span class="name">湿度</span>
+          <span class="old">
+            {{ formatValue(currentItem?.crops.humidity, Unit.humidity) }}</span
+          >
+          <span class="new">
+            {{ formatValue(currentItem.humidity, Unit.humidity) }}</span
+          >
+          <span class="res">
+            <icon-check-circle
+              v-if="judgeList?.humidity"
+              style="color: #00b42a; font-size: 28px" />
+            <icon-close-circle v-else style="color: red; font-size: 28px"
+          /></span>
+        </li>
+        <li class="feedback-item">
+          <span class="name">二氧化碳浓度</span>
+          <span class="old">
+            {{
+              formatValue(currentItem?.crops.carbonDioxide, Unit.carbonDioxide)
+            }}</span
+          >
+          <span class="new">
+            {{
+              formatValue(currentItem.carbonDioxide, Unit.carbonDioxide)
+            }}</span
+          >
+          <span class="res">
+            <icon-check-circle
+              v-if="judgeList?.carbonDioxide"
+              style="color: #00b42a; font-size: 28px" />
+            <icon-close-circle v-else style="color: red; font-size: 28px"
+          /></span>
+        </li>
+        <li class="feedback-item">
+          <span class="name">日照时间</span>
+          <span class="old">
+            {{
+              formatValue(currentItem?.crops.sunshineTime, Unit.sunshineTime)
+            }}</span
+          >
+          <span class="new">
+            {{ formatValue(currentItem.sunshineTime, Unit.sunshineTime) }}</span
+          >
+          <span class="res">
+            <icon-check-circle
+              v-if="judgeList?.sunshineTime"
+              style="color: #00b42a; font-size: 28px" />
+            <icon-close-circle v-else style="color: red; font-size: 28px"
+          /></span>
+        </li>
+      </ul>
+      <div class="result-box">
+        <span>达标率：</span>
+        <span class="num">{{ okPercentage }}%</span>
+      </div>
+
       <div>
-        <a-steps :current="currentStep" label-placement="vertical">
-          <a-step description="等待商家出货">出货</a-step>
-          <a-step description="等待用户签收">签收</a-step>
-          <a-step description="交易成功">成功</a-step>
-        </a-steps></div
-      >
+        <a-textarea
+          v-model="formModel.description"
+          placeholder="写出建议"
+        ></a-textarea>
+      </div>
       <template #footer>
         <a-button @click="cancelModal">取消</a-button>
         <a-button
           type="primary"
           :disabled="currentStatus.disabled"
           @click="submitForm"
-          >{{ currentStatus.submitText }}</a-button
+          >确实</a-button
         >
       </template>
     </a-modal>
@@ -83,18 +179,18 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  addPlantOrder,
-  deletePlantOrderById,
-  getPlantOrderList,
-  updatePlantOrder,
-} from '@/api/order'
+import { getAllCropsList } from '@/api/crops'
+import { deleteFeedbackById, getFeedbackList } from '@/api/feedback'
+import { updateHandle } from '@/api/handle'
 import Breadcrumb from '@/components/breadcrumb/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
+import useStatic, { Unit } from '@/hooks/useStatic'
 import useTable from '@/hooks/useTable'
+import { useUserStore } from '@/store'
 import { deepClone } from '@/utils/tools'
-import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
+import { Message } from '@arco-design/web-vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
 const { formRef, formModel, resetForm } = useForm()
 const { isEdit, modalVisible, showModal, cancelModal, clearModal } = useModal()
@@ -102,86 +198,124 @@ const format = inject('formateDate')
 const handleCode = inject('handleCode')
 const currentStep = ref(0)
 const { pagination, renderData, fetchData, onPageChange, loading, deleteData } =
-  useTable(getPlantOrderList, deletePlantOrderById)
+  useTable(getFeedbackList, deleteFeedbackById)
 const currentStatus = ref({})
-
-const options = ref([
-  {
-    label: '-',
-    status: -1,
-    color: 'gray',
-    disabled: true,
-    submitText: '未知状态',
-  },
-  {
-    label: '待出货',
-    status: 0,
-    color: 'gray',
-    disabled: false,
-    submitText: '出货',
-    nextStatus: 1,
-  },
-  {
-    label: '已出货',
-    status: 1,
-    color: 'gold',
-    disabled: true,
-    submitText: '等待用户签收',
-    nextStatus: 2,
-  },
-  {
-    label: '已签收',
-    status: 2,
-    color: 'blue',
-    disabled: false,
-    submitText: '关闭交易',
-    nextStatus: 3,
-  },
-  {
-    label: '交易完成',
-    status: 3,
-    disabled: true,
-    color: 'green',
-    submitText: '交易完成',
-  },
-])
-
+const { formatValue, findHandleStatus, parseValue } = useStatic()
 // const showModal = ()
-const getCurrentStatus = (status: number) => {
-  return options.value.find((i) => i.status === status) || options.value[0]
+
+const currentItem = ref({})
+const judgeNum = (range, newVal) => {
+  const { left, right } = parseValue(range)
+  if (+newVal >= left && +newVal <= +right) {
+    return true
+  }
+  return false
 }
+
+const judgeList = computed(() => {
+  const rangValue = currentItem.value
+  const newValue = currentItem.value.crops
+  return {
+    temperature: judgeNum(rangValue?.temperature, newValue?.temperature),
+    humidity: judgeNum(rangValue?.humidity, newValue?.humidity),
+    carbonDioxide: judgeNum(rangValue?.carbonDioxide, newValue?.carbonDioxide),
+    sunshineTime: judgeNum(rangValue?.sunshineTime, newValue?.sunshineTime),
+  }
+})
+
+const okPercentage = computed(() => {
+  const all = Object.values(judgeList.value).length
+  const ok = Object.values(judgeList.value).filter((i) => i).length
+  return (ok / all) * 100
+})
+
 const newShowModal = (row) => {
-  showModal(undefined, () => {
-    formModel.value = deepClone(row)
-    currentStep.value = row.status
-    currentStatus.value = getCurrentStatus(row.status)
-    // return options.value[idx]
-  })
+  currentItem.value = deepClone(row)
+  formModel.value = deepClone(row)
+  showModal()
 }
 const reload = () => {
   cancelModal()
   fetchData()
 }
 
-const submitForm = async () => {
-  const currentText = currentStatus.value.submitText
-  const { success } = await updatePlantOrder({
-    ...formModel.value,
-    status: currentStatus.value?.nextStatus,
-  })
-  handleCode(success, [`${currentText}成功`, `${currentText}失败`], () =>
-    reload()
-  )
-}
-
-const confirmModal = () => submitForm()
-onMounted(async () => {
+const userStore = useUserStore()
+const newRenderData = ref([])
+const newFetchData = async () => {
   await fetchData()
+
+  const { data } = await getAllCropsList()
+  newRenderData.value = renderData.value.map((i) => {
+    const crops = data.find((j) => j.id === i.cropsId) || { name: '未知' }
+    const user = userStore.findUser(i.userid) || { username: '未知' }
+    return {
+      ...i,
+      crops,
+      user,
+    }
+  })
+}
+const submitForm = async () => {
+  if (!formModel.value.description) {
+    Message.error('请填入建议')
+    return
+  }
+  const payload = {
+    // ...formModel.value,
+    id: currentItem.value.id,
+    utime: Date.now(),
+    state: 1,
+    description: formModel.value.description,
+  }
+
+  const { success } = await updateHandle(payload)
+
+  handleCode(success, [`处理成功`, `处理失败`], () => {
+    modalVisible.value = false
+    newFetchData()
+    formModel.value = {}
+  })
+}
+const confirmModal = () => submitForm()
+
+onMounted(async () => {
+  await userStore.getAllUser()
+
+  await newFetchData()
 })
 </script>
 
 <style lang="less" scoped>
 .desc {
   padding-left: 60px;
+}
+
+.feedback-list {
+  .feedback-item {
+    display: flex;
+    span {
+      flex: 2;
+      padding: 10px 0;
+    }
+    span:nth-child(4) {
+      flex: 1;
+    }
+
+    &.header {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+}
+.result-box {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-right: 30px;
+  .num {
+    font-size: 20px;
+  }
 }
 </style>

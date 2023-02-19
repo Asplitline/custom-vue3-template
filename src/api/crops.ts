@@ -1,6 +1,9 @@
 import service, { handleQuery } from './index'
 import { QueryDeleteParams, QueryParams } from './common'
 
+export function getAllCropsList() {
+  return service.get<QueryParams>('/apiCrops/list')
+}
 export function getCropsList(params: QueryParams) {
   return service.get<QueryParams>('/apiCrops/pageList', { params })
 }

@@ -1,14 +1,19 @@
+import {
+  LoginData,
+  getUserList,
+  login as userLogin,
+  logout as userLogout,
+} from '@/api/user'
 import { removeAction, updateAction } from '@/store/utils'
-import { defineStore } from 'pinia'
-import { login as userLogin, logout as userLogout, LoginData } from '@/api/user'
-import { setToken, clearToken } from '@/utils/auth'
 import { Cache, isEmpty } from '@/utils/tools'
+import { defineStore } from 'pinia'
 import { UserState } from './types'
 
 const useUserStore = defineStore('user', {
-  state: (): { token: string; info: UserState } => ({
+  state: (): { token: string; info: UserState; userList: any[] } => ({
     token: Cache.get('token'),
     info: Cache.get('info'),
+    userList: [],
   }),
 
   getters: {
@@ -17,6 +22,9 @@ const useUserStore = defineStore('user', {
     },
     isAdmin: (state) => {
       return +state.info.level! === 1
+    },
+    findUser: (state) => {
+      return (id: string) => state.userList.find((i) => i.id === id)
     },
   },
 
@@ -52,6 +60,11 @@ const useUserStore = defineStore('user', {
     async logout() {
       await userLogout()
       this.resetInfo()
+    },
+
+    async getAllUser() {
+      const { list } = await getUserList({ page: 1, size: 999 })
+      this.userList = list
     },
   },
 })
