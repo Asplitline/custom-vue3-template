@@ -13,10 +13,10 @@ const useCacheStore = defineStore('cache', {
 
   getters: {
     pCategory() {
-      return this.categoryList.filter((i) => !i.pid)
+      return this.categoryList?.filter((i) => !i.pid)
     },
     getCategory() {
-      return (id) => this.categoryList.find((i) => i.id === id)
+      return (id) => this.categoryList?.find((i) => i.id === id)
     },
   },
 

@@ -124,7 +124,12 @@
                   }}</a-tag>
                 </span>
               </div>
-              <button class="btn" @click="showFeedback(crops)">反馈</button>
+              <button
+                class="btn"
+                :class="{ disabled: !userStore.isLogin }"
+                @click="showFeedback(crops)"
+                >{{ !userStore.isLogin ? '登陆后才能操作' : '反馈' }}</button
+              >
             </li>
           </ul>
 
@@ -188,16 +193,16 @@
 
 <script lang="ts" setup>
 import { getCropsList } from '@/api/crops'
+import { addHandle } from '@/api/handle'
 import BannerCard from '@/components/banner-card/index.vue'
 import useForm from '@/hooks/useForm'
 import useModal from '@/hooks/useModal'
 import useStatic, { Unit } from '@/hooks/useStatic'
-import { addHandle } from '@/api/handle'
 import { useCacheStore, useUserStore } from '@/store'
 import { productStatus } from '@/utils/static'
 import { deepClone } from '@/utils/tools'
+import { computed, inject, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { computed, onMounted, ref, reactive, inject } from 'vue'
 
 const handleCode = inject('handleCode')
 
@@ -474,6 +479,11 @@ onMounted(async () => {
   &:hover {
     cursor: pointer;
     opacity: 0.7;
+  }
+  &.disabled {
+    pointer-events: none;
+    background-color: #ccc;
+    color: #222;
   }
 }
 .reset-btn {

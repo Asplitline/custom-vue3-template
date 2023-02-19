@@ -76,7 +76,6 @@ import { useRouter } from 'vue-router'
 const appStore = useAppStore()
 const userStore = useUserStore()
 const { logout } = useUser()
-const { changeLocale } = useLocale()
 const avatar = computed(() => {
   return `${import.meta.env.VITE_API_IMG_URL}/${userStore.info.url}`
 })

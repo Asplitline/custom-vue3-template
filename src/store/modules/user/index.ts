@@ -21,7 +21,7 @@ const useUserStore = defineStore('user', {
       return !isEmpty(state.token)
     },
     isAdmin: (state) => {
-      return +state.info.level! === 1
+      return +state.info?.level === 1
     },
     findUser: (state) => {
       return (id: string) => state.userList.find((i) => i.id === id)
@@ -48,11 +48,15 @@ const useUserStore = defineStore('user', {
     // Login
     async login(loginForm: LoginData) {
       try {
-        const res = await userLogin(loginForm)
-        this.updateUser(res.data)
+        const { success, data, message } = await userLogin(loginForm)
+        if (success) {
+          this.updateUser(data)
+        }
+        return success
       } catch (error) {
         removeAction(this, 'info')
         removeAction(this, 'token')
+        return false
       }
     },
 

@@ -24,6 +24,7 @@ export function logout() {
 export function addUser(data: any) {
   return service.post<QueryParams>('/user/login', data)
 }
+
 export function updateUser(data: any) {
   return service.put<QueryParams>('/user/updateUser', data)
 }

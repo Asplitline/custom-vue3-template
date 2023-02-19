@@ -102,14 +102,28 @@
       </a-col>
       <a-col :span="8">
         <banner-card title="科普文章">
-          <ul class="post-list">
-            <li v-for="post in postList" :key="post.id" class="post-item">
-              <span class="title">{{ post.title }}{{ post.title }}</span>
-              <span class="date">{{
-                formateDate(post.createTime, 'YYYY-MM-DD')
-              }}</span>
-            </li>
-          </ul>
+          <template v-if="postList.length">
+            <ul class="post-list">
+              <li
+                v-for="post in postList"
+                :key="post.id"
+                class="post-item"
+                @click="gotoPost(post)"
+              >
+                <span class="title">{{ post.title }}{{ post.title }}</span>
+                <span class="date">{{
+                  formateDate(post.createTime, 'YYYY-MM-DD')
+                }}</span>
+              </li>
+            </ul>
+            <a-pagination
+              :total="postQuery.total"
+              :page-size="postQuery.size"
+              :current="postQuery.page"
+              @change="handlePostPageChange"
+            />
+          </template>
+          <div v-else>暂无文章</div>
         </banner-card>
       </a-col>
     </a-row>
@@ -141,10 +155,15 @@ const categoryList = computed(() => {
 })
 
 const postList = ref([])
+const postQuery = ref({
+  page: 1,
+  size: 12,
+  total: 10,
+})
 const fetchPostList = async () => {
-  const { list } = await getContentList({ page: 1, size: 12 })
+  const { list, total } = await getContentList(postQuery.value)
+  postQuery.value.total = total
   postList.value = list
-  console.log('list: ', list)
 }
 
 const renderData = ref([])
@@ -156,6 +175,13 @@ const fetchConfigList = async () => {
 const router = useRouter()
 const gotoCategory = (item) => {
   router.push({ name: 'home-product', query: { id: item.id } })
+}
+const handlePostPageChange = (v) => {
+  postQuery.value.page = v
+  fetchPostList()
+}
+const gotoPost = (item) => {
+  router.push({ name: 'home-post', params: { id: item.id } })
 }
 onMounted(() => {
   fetchCarousel()

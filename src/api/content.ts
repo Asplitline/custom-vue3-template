@@ -15,3 +15,7 @@ export function updateContent(data: any) {
 export function deleteContentById(params: QueryDeleteParams) {
   return service.delete('/apiPost/delete', { params })
 }
+
+export function getContentById(params: { id: string }) {
+  return service.get('/apiPost/getById', { params })
+}
