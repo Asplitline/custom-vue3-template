@@ -4,8 +4,8 @@ import { Message } from '@arco-design/web-vue'
 
 export default {
   install(app: App) {
-    app.provide('formateDate', (v): string => {
-      const value = dayjs(v).format('YYYY-MM-DD HH:mm:ss')
+    app.provide('formateDate', (v, str = 'YYYY-MM-DD HH:mm:ss'): string => {
+      const value = dayjs(v).format(str)
       return value === 'Invalid Date' ? '暂无' : value
     })
 

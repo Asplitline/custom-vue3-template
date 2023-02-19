@@ -1,3 +1,4 @@
+export const IMG_URL = 'http://localhost:8090/'
 export const userLevelInfo = [
   { text: '用户', level: 0, color: 'blue' },
   { text: '管理员', level: 1, color: 'red' },

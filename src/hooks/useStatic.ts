@@ -1,4 +1,9 @@
-import { productStatus, toggleInfo, userLevelInfo } from '@/utils/static'
+import {
+  productStatus,
+  toggleInfo,
+  userLevelInfo,
+  IMG_URL,
+} from '@/utils/static'
 
 export enum Unit {
   temperature = '℃',
@@ -22,6 +27,10 @@ export default function useStatic() {
     return key ? res?.[key] : res
   }
 
+  const bindImg = (url: string) => {
+    return `${IMG_URL}${url}`
+  }
+
   const parseValue = (str: string, type: Unit) => {
     const [left, right] = str?.split(',') || ''
     return {
@@ -41,5 +50,6 @@ export default function useStatic() {
     findProductStatus,
     parseValue,
     formatValue,
+    bindImg,
   }
 }

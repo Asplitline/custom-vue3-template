@@ -53,9 +53,9 @@
               </a-space>
             </a-doption>
             <a-doption>
-              <a-space @click="handleLogout">
-                <icon-export />
-                <span> 前往首页 </span>
+              <a-space @click="gotoHome">
+                <icon-home />
+                <span> 跳转官网 </span>
               </a-space>
             </a-doption>
           </template>
@@ -70,7 +70,8 @@ import useLocale from '@/hooks/locale'
 import useUser from '@/hooks/user'
 import { useAppStore, useUserStore } from '@/store'
 import { useDark, useToggle } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -94,12 +95,14 @@ const isDark = useDark({
   },
 })
 const toggleTheme = useToggle(isDark)
-const test = () => {
-  console.log('111 :', 111)
-}
-console.log('userStore: ', userStore)
+
 const handleLogout = () => {
   logout()
+}
+
+const router = useRouter()
+const gotoHome = () => {
+  router.push({ name: 'home-index' })
 }
 </script>
 
