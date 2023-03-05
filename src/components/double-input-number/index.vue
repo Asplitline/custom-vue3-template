@@ -39,14 +39,6 @@ const str = computed(() => {
     : [leftValue.value || 0, rightValue.value || 0]
   return arr.join(',')
 })
-
-watch(
-  () => str.value,
-  (cur, pre) => {
-    emits('update:modelValue', cur)
-  }
-)
-
 const initData = (value) => {
   if (value) {
     const [leftVal, rightVal] = value?.split(',')
@@ -54,6 +46,20 @@ const initData = (value) => {
     rightValue.value = +rightVal
   }
 }
+watch(
+  () => str.value,
+  (cur, pre) => {
+    emits('update:modelValue', cur)
+  }
+)
+
+watch(
+  () => props.modelValue,
+  (cur) => {
+    initData(props.modelValue)
+  }
+)
+
 // watch(
 //   () => props.modelValue,
 //   (cur) => {

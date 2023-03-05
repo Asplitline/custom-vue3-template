@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 
-export default function useForm() {
+export default function useForm(defForm: any = {}) {
   const formRef = ref()
-  const formModel = ref({})
+  const formModel = ref(defForm)
 
   const resetForm = () => {
     formRef.value.resetFields()

@@ -304,18 +304,20 @@ const readId = ref('')
 const readConfig = () => {
   if (!readId.value) return Message.error('无法读取空配置')
   const config = configList.value.find((i) => i.id === readId.value)
-  formModel.value = {
-    ...formModel.value,
+  // eslint-disable-next-line prefer-object-spread
+  formModel.value = Object.assign({}, formModel.value, {
     temperature: config.temperature,
     humidity: config.humidity,
     carbonDioxide: config.carbonDioxide,
     sunshineTime: config.sunshineTime,
-  }
+  })
+  console.log('formModel.value :', formModel.value)
   return null
 }
 
 const clearModal = () => {
   readId.value = ''
+  formModel.value = {}
   _clearModal()
 }
 const fetchConfig = async () => {
@@ -333,7 +335,7 @@ const showModal = async (row?: any) => {
       formModel.value = deepClone(row)
     } else {
       isEdit.value = false
-      formModel.value = {}
+      // formModel.value = {}
     }
   })
 }
