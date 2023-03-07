@@ -24,7 +24,7 @@
                   :style="{ margin: 0, fontSize: '18px', color: '#fff' }"
                   :heading="5"
                 >
-                  智慧农业后台系统
+                  疫情防控平台
                 </a-typography-title>
               </a-space>
             </div>

@@ -1,5 +1,5 @@
 export default {
-  'login.form.title': 'Login to 智慧农业后台系统',
+  'login.form.title': 'Login to 疫情防控平台',
   'login.form.userName.errMsg': 'Username cannot be empty',
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.login.errMsg': 'Login error, refresh and try again',
